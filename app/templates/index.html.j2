@@ -1,4 +1,31 @@
 {% extends "base.html.j2" %}
 {% block app_content %}
-    <h1>Hi</h1>
+        <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="{{ url_for('ticketing') }}">Ticketing</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('cinityled') }}">CINITY LED</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('imax') }}">IMAX</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('4dx') }}">4DX</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('special') }}">Special</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('upcoming') }}">Upcoming</a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+            </div>
+        </div>
+    </nav>
 {% endblock %}
