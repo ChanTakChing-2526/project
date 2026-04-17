@@ -1,6 +1,6 @@
 from flask import render_template, redirect, flash, url_for, request
 from flask_login import current_user, login_user, logout_user
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse
 
 from app import app, db
 from app.email import send_password_reset_email
@@ -12,25 +12,25 @@ from app.models import User
 def index():
     return render_template("index.html.j2", title="Home")
 
-@app.route("/ticketing")
-def ticketing():
-    return render_template("ticketing.html.j2")
+#@app.route("/ticketing")
+#def ticketing():
+    #return render_template("ticketing.html.j2")
 
-@app.route("/upcoming")
-def upcoming():
-    return render_template("upcoming.html.j2")
+#@app.route("/upcoming")
+#def upcoming():
+    #return render_template("upcoming.html.j2")
 
-@app.route("/special")
-def special():
-    return render_template("special.html.j2")
+#@app.route("/special")
+#def special():
+    #return render_template("special.html.j2")
 
-@app.route("/cinema")
-def cinema():
-    return render_template("cinema.html.j2")
+#@app.route("/cinema")
+#def cinema():
+    #return render_template("cinema.html.j2")
 
-@app.route("/gift_card_shop")
-def gift_card_shop():
-    return render_template("gift_card_shop.html.j2")
+#@app.route("/gift_card_shop")
+#def gift_card_shop():
+    #return render_template("gift_card_shop.html.j2")
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -47,7 +47,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
 
         next_page = request.args.get("next")
-        if not next_page or url_parse(next_page).netloc != "":
+        if not next_page or urlparse(next_page).netloc != "":
             next_page = url_for('index')
         redirect(next_page)
     return render_template('login.html.j2', title="Sign In", form=form)
