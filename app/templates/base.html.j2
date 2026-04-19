@@ -7,33 +7,6 @@
     {% endif %}
 {% endblock title %}
 
-{# {% block navbar %}
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="{{ url_for('index') }}">Home</a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="navbar-text">
-                        {% if current_user.is_anonymous %}
-                            <a href="{{ url_for('login') }}" style="display: inline; padding: 0;">Login</a>
-                            <span style="margin: 0 8px;">|</span>
-                            <a href="{{ url_for('register') }}" style="display: inline; padding: 0;">Register</a>
-                        {% else %}
-                            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-                            <span style="margin: 0 8px;">|</span>
-                            <a href="{{ url_for('logout') }}">Logout</a>
-                        {% endif %}
-                     </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-{% endblock navbar %} #}
-
 {% block navbar %}
 <style>
     .top-auth-bar {
@@ -90,8 +63,6 @@
         </div>
     </div>
 </nav>
-
-
 
 {% endblock navbar %}
 

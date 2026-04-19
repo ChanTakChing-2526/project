@@ -1,6 +1,6 @@
 {% extends "base.html.j2" %}
-{# {% import 'bootstrap/wtf.html' as wtf %}
-{% block app_content %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{# {% block app_content %}
     <h1>Member Login</h1>
     <div class="row">
         <div class="col-md-4">{{ wtf.quick_form(form) }}</div>
@@ -14,6 +14,51 @@
     </p>
 {% endblock %} #}
 {% block app_content %}
+{#<style>
+    .container-fluid {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: inline-flex; /* 讓選單橫向排列並居中 */
+        align-items: center;
+    }
+
+    .container-fluidli {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .container-fluid li a {
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        padding: 0 25px; /* 控制文字間距 */
+        transition: color 0.3s;
+    }
+
+    .container-fluid li a:hover {
+        color: #ed4e51;
+    }
+
+    /* 關鍵：紅色垂直分隔線 */
+    .container-fluid li:not(:last-child)::after {
+        content: "";
+        height: 12px; /* 短線高度 */
+        width: 1px;
+        background-color: #ed4e51; /* 百老匯紅 */
+        display: inline-block;
+    }
+    
+    /* 底部最後一條長紅線 */
+    .bottom-red-line {
+        height: 1px;
+        background-color: #ed4e51;
+        width: 100%;
+        margin-top: 15px;
+    }
+</style>#}
+
 <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
         <div class="container-fluid"> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
@@ -26,7 +71,7 @@
             </div>
         </div>
         <div style="height: 2px; background-color: red; width: 100%;"></div>
-    </nav>
+</nav>
 <style>
     body { background-color: #fff; }
     .container { width: 100% !important; max-width: 100% !important; padding: 0 !important; }

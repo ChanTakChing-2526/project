@@ -47,3 +47,15 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+class Movie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    moviename = db.Column(db.String(128), index=True, unique=True)
+    runtime = db.Column(db.Integer(3))
+    category = db.Column(db.String(8))
+    language = db.Column(db.String(30))
+    releasedate = db.Column(db.Integer(10), index=True)
+    poster_url = db.Column(db.String(256))
+
+    def __repr__(self) -> str:
+        return f'<User {self.username}>'
