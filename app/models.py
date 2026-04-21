@@ -57,5 +57,10 @@ class Movie(db.Model):
     releasedate = db.Column(db.Integer(10), index=True)
     poster_url = db.Column(db.String(256))
 
-    def __repr__(self) -> str:
-        return f'<User {self.username}>'
+#    def __repr__(self) -> str:
+#        return f'<User {self.username}>'
+
+class Cinema(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cinemaname = db.Column(db.String(128), index=True, unique=True)
+    
