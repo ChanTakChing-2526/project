@@ -51,19 +51,45 @@ def load_user(id):
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     moviename = db.Column(db.String(128), index=True, unique=True)
-    runtime = db.Column(db.Integer)                    # 已修正
+    runtime = db.Column(db.Integer)
     category = db.Column(db.String(8))
     language = db.Column(db.String(30))
     releasedate = db.Column(db.Integer, index=True)
     poster_url = db.Column(db.String(256))
-    
-    # === 新增：支援 4DX、IMAX 等格式 ===
     formats = db.Column(db.JSON)
 
-#    def __repr__(self) -> str:
-#        return f'<User {self.username}>'
+    # === 與活動的多對多關聯 ===
+    events = db.relationship('Event', secondary='movie_event',
+                             back_populates='movies')
+
+    def __repr__(self):
+        return f'<Movie {self.moviename}>'
+
 
 class Cinema(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cinemaname = db.Column(db.String(128), index=True, unique=True)
-    
+
+
+# ====================== 活動功能 ======================
+# 中間表（association table）—— 必須定義喺 Event 之前
+movie_event = db.Table('movie_event',
+    db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True),
+    db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True)
+)
+
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+    banner_image = db.Column(db.String(300))
+
+    # 多對多關聯
+    movies = db.relationship('Movie', secondary='movie_event',
+                             back_populates='events')
+
+    def __repr__(self):
+        return f'<Event {self.title}>'
