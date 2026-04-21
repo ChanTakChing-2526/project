@@ -1,0 +1,47 @@
+{% extends "base.html.j2" %}
+
+{% block app_content %}
+<div class="container">
+    <h1>{{ page_title | default('電影列表') }}</h1>
+    
+    {% if current_filter %}
+    <p><strong>目前篩選：</strong> {{ current_filter }}</p>
+    {% endif %}
+
+    <p>找到 <strong>{{ movies|length }}</strong> 套電影</p>
+
+    {% if movies %}
+        <div class="row">
+            {% for movie in movies %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.moviename }}" 
+                         style="height: 300px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.moviename }}</h5>
+                        <p class="card-text">
+                            時長：{{ movie.runtime }} 分鐘<br>
+                            語言：{{ movie.language }}<br>
+                            類型：{{ movie.category }}
+                        </p>
+                        {% if movie.formats %}
+                        <div class="mt-2">
+                            {% for fmt in movie.formats %}
+                                <span class="badge bg-primary me-1">{{ fmt }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            暫時冇符合條件嘅電影。
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

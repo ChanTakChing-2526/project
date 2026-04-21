@@ -21,4 +21,6 @@ mail = Mail(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
-from app import routes
+from app.routes import routes
+from app.routes.movies import movies_bp     
+app.register_blueprint(movies_bp)

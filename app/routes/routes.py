@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 from app import app, db
 from app.email import send_password_reset_email
 from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.models import User
+from app.models import *
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index")
@@ -111,3 +111,5 @@ def user(username):
         'index', page=posts.prev_num) if posts.prev_num else None
     return render_template('user.html.j2', user=user, posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
+
+

@@ -3,6 +3,7 @@ from hashlib import md5
 from app import app, db, login
 import jwt
 
+
 from flask_login import UserMixin
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -12,7 +13,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -51,11 +51,14 @@ def load_user(id):
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     moviename = db.Column(db.String(128), index=True, unique=True)
-    runtime = db.Column(db.Integer(3))
+    runtime = db.Column(db.Integer)                    # 已修正
     category = db.Column(db.String(8))
     language = db.Column(db.String(30))
-    releasedate = db.Column(db.Integer(10), index=True)
+    releasedate = db.Column(db.Integer, index=True)
     poster_url = db.Column(db.String(256))
+    
+    # === 新增：支援 4DX、IMAX 等格式 ===
+    formats = db.Column(db.JSON)
 
 #    def __repr__(self) -> str:
 #        return f'<User {self.username}>'
