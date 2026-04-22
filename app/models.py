@@ -65,11 +65,30 @@ class Movie(db.Model):
 
     def __repr__(self) -> str:
         return f'<Movie {self.title}>'
+    
+#movie_event = db.Table('movie_event',
+#    db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True),
+#    db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True) 
+#)
+
+#class Event(db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    title = db.Column(db.String(200), nullable=False)
+#    description = db.Column(db.Text)
+#    start_date = db.Column(db.DateTime)
+#    end_date = db.Column(db.DateTime)
+#    banner_image = db.Column(db.String(300))
+
+#    movies = db.relationship('Movie', secondary='movie_event', back_populates='events')
+
+#    def __repr__(self):
+#        return f'<Event {self.title}>'
 
 class Cinema(db.Model):
     __tablename__ = 'cinema'
     id = db.Column(db.Integer, primary_key=True)
     cinemaname = db.Column(db.String(128), index=True, unique=True)
+    region = db.Column(db.String(5))
     address = db.Column(db.String(256))
 
     halls = db.relationship('Halls', backref='cinema', lazy='dynamic')

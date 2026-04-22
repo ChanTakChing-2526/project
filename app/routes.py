@@ -1,8 +1,10 @@
-from flask import render_template, redirect, flash, url_for, request
+from flask import render_template, redirect, flash, url_for, request, jsonify
+from collections import defaultdict
 from flask_login import current_user, login_user, logout_user
 from urllib.parse import urlparse
 
 from app import app, db
+from app.models import Cinema
 from app.email import send_password_reset_email
 from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
@@ -24,9 +26,18 @@ def index():
 #def special():
     #return render_template("special.html.j2")
 
-#@app.route("/cinema")
-#def cinema():
-    #return render_template("cinema.html.j2")
+@app.route("/cinema")
+def cinemas_api():
+    # 1. 從資料庫撈出所有電影院
+    all_cinemas = Cinema.query.all()
+    
+    # 2. 進行分組 (Group by region)
+    grouped_cinemas = defaultdict(list)
+    for cinema in all_cinemas:
+        grouped_cinemas[cinema.region].append(cinema)
+        
+    # 3. 傳遞給模板
+    return render_template('cinema.html.j2', cinemas=grouped_cinemas)
 
 #@app.route("/gift_card_shop")
 #def gift_card_shop():

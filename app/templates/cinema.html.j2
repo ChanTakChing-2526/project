@@ -1,0 +1,66 @@
+{% extends "base.html.j2" %}
+{% block app_content %}
+    <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
+        <div class="container-fluid"> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
+                    <li><a href="#">Ticketing</a></li>
+                    <li><a href="#">Upcoming</a></li>
+                    <li><a href="#">Special</a></li>
+                    <li><a href="/cinema">Cinema</a></li>
+                    <li><a href="#">Gift Card Shop</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="height: 2px; background-color: red; width: 100%;"></div>
+    </nav>
+    <style>
+        .page-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .map-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .list-section h2 { border-bottom: 2px solid #333; padding-bottom: 10px; }
+        
+        .region-group { margin-bottom: 25px; }
+        .region-name { 
+            color: #b8860b;
+            font-size: 1.3rem; 
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .cinema-list { list-style: none; padding: 0; }
+        .cinema-list li { margin: 8px 0; font-size: 1rem; cursor: pointer; }
+        .cinema-list li:hover { color: #b8860b; text-decoration: underline; }
+    </style>
+    <div class="page-container">
+    
+        <div class="map-section">
+            <img src="https://www.cinema.com.hk/_next/image?url=%2Fimages%2Fmap.jpg&w=3840&q=75" alt="Hong Kong Cinema Map">
+        </div>
+
+        <div class="list-section">
+            <h2>Cinema</h2>
+        
+            {% for region, cinema_list in cinemas.items() %}
+                <div class="region-group">
+                    <div class="region-name">{{ region }}</div>
+                    <ul class="cinema-list">
+                        {% for cinema in cinema_list %}
+                            <li>{{ cinema.cinemaname }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

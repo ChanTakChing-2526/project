@@ -21,4 +21,4 @@ mail = Mail(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
-from app import routes
+from app import models, routes
