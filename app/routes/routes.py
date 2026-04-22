@@ -116,16 +116,14 @@ def user(username):
 # ====================== 活動功能 ======================
 @app.route('/events')
 def events_list():
-    # 只顯示進行中或即將開始嘅活動
     events = Event.query.order_by(Event.start_date.desc()).all()
     return render_template('events_list.html.j2', events=events)
 
-@app.route('/events/<int:event_id>')
-def event_detail(event_id):
-    event = Event.query.get_or_404(event_id)
-    movies = event.movies   # ← 自動取出屬於呢個活動嘅電影
-    
-    return render_template('movie_list.html.j2',   # ← 同電影列表用同一個 template！
-                           movies=movies,
+
+@app.route('/events/<string:slug>')
+def event_detail(slug):
+    event = Event.query.filter_by(slug=slug).first_or_404()
+    return render_template('movie_list.html.j2',
+                           movies=event.movies,
                            page_title=event.title,
-                           current_filter=None)   # 可以改做 event.title
+                           current_filter=None)
