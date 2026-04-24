@@ -2,55 +2,38 @@ from flask import render_template, redirect, flash, url_for, request, jsonify
 from collections import defaultdict
 from flask_login import current_user, login_user, logout_user
 from urllib.parse import urlparse
+from sqlalchemy import asc
 
 from app import app, db
-from app.models import Cinema
+from app.models import Cinema, Showtimes
 from app.email import send_password_reset_email
 from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
+
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index")
 def index():
     return render_template("index.html.j2", title="Home")
 
-#@app.route("/ticketing")
-#def ticketing():
-    #return render_template("ticketing.html.j2")
+@app.route("/ticketing")
+def ticketing():
+    return render_template("ticketing.html.j2", itle="Ticketing")
 
-#@app.route("/upcoming")
-#def upcoming():
-    #return render_template("upcoming.html.j2")
+@app.route("/upcoming")
+def upcoming():
+    return render_template("upcoming.html.j2")
 
-#@app.route("/special")
-#def special():
-    #return render_template("special.html.j2")
+@app.route("/special")
+def special():
+    return render_template("special.html.j2")
 
-#@app.route("/cinema")
-#def cinemas_api():
-    all_cinemas = Cinema.query.all()
-    
-    grouped_cinemas = defaultdict(list)
-    for cinema in all_cinemas:
-        grouped_cinemas[cinema.region].append(cinema)
-        
-    return render_template('cinema.html.j2', cinemas=grouped_cinemas)
-#@app.route('/cinema')
-#def cinemas():
-    cinema_data = {
-        "HK": ["MOVIE MOViE Pacific Place (Admiralty)", "MOVIE MOViE Cityplaza (Taikoo Shing)", "PALACE ifc"],
-        "KLN": ["GALA CINEMA (Langham Place)", "PREMIERE ELEMENTS", "B+ cinema MOKO (Mong Kok East)", "B+ cinema apm (Kwun Tong)", "CINEMATHEQUE", "MONGKOK"],
-        "NT": ["MY CINEMA YOHO MALL", "KWAI FONG", "TSUEN WAN", "KINGSWOOD"],
-        "Macau": ["Studio City Cinema"]
-    }
-    return render_template('cinema.html.j2', title='Cinema Locations', cinemas=cinema_data)
 @app.route('/cinema')
 def cinemas():
     # 1. 從資料庫撈出所有電影院
     all_cinemas = Cinema.query.all()
     
     # 2. 將資料按 region 分組
-    # 格式會變成: {"HK": [CinemaObj, ...], "KLN": [CinemaObj, ...]}
     cinema_dict = defaultdict(list)
     for c in all_cinemas:
         cinema_dict[c.region].append(c)
@@ -61,6 +44,7 @@ def cinemas():
 def cinema_detail(id):
     # 使用 .get_or_404 處理找不到 id 的情況
     cinema = Cinema.query.get_or_404(id)
+    showtimes = cinema.showtimes.order_by(Showtimes.movie_id, Showtimes.start_time).all()
     return render_template('cinema_detail.html.j2', cinema=cinema)
 
 #@app.route("/gift_card_shop")
