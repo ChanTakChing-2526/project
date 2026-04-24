@@ -22,3 +22,7 @@ bootstrap = Bootstrap(app)
 moment = Moment(app)
 
 from app import models, routes
+#from app import routes
+#from app.movies import movies_bp 
+#app.register_blueprint(routes)  
+#app.register_blueprint(movies_bp)

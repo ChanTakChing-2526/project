@@ -7,7 +7,7 @@ from app import app, db
 from app.models import Cinema
 from app.email import send_password_reset_email
 from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.models import User
+from app.models import *
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index")
@@ -146,3 +146,19 @@ def user(username):
         'index', page=posts.prev_num) if posts.prev_num else None
     return render_template('user.html.j2', user=user, posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
+
+
+# ====================== 活動功能 ======================
+@app.route('/events')
+def events_list():
+    events = Event.query.order_by(Event.start_date.desc()).all()
+    return render_template('events_list.html.j2', events=events)
+
+
+@app.route('/events/<string:slug>')
+def event_detail(slug):
+    event = Event.query.filter_by(slug=slug).first_or_404()
+    return render_template('movie_list.html.j2',
+                           movies=event.movies,
+                           page_title=event.title,
+                           current_filter=None)
