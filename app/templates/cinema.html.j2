@@ -13,7 +13,7 @@
         </div>
         <div style="height: 2px; background-color: red; width: 100%;"></div>
     </nav>
-    <style>
+    {#<style>
         .page-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -62,5 +62,69 @@
                 </div>
             {% endfor %}
         </div>
+    </div>#}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <img src="https://www.cinema.com.hk/_next/image?url=%2Fimages%2Fmap.jpg&w=3840&q=75" class="img-fluid" alt="Map">
+        </div>
+
+        <div class="col-md-4">
+            <h3>Cinema</h3>
+            <hr>
+            {# 遍歷我們整理好的 dictionary #}
+            {% for region, cinema_list in cinema_dict.items() %}
+                <div class="cinema-group">
+                    <h4 class="region-title">{{ region }}</h4>
+                    <ul class="list-unstyled">
+                        {% for cinema in cinema_list %}
+                            <li>
+                                {# 使用 cinema.id 作為連結參數，更穩健 #}
+                                <a href="{{ url_for('cinema_detail', id=cinema.id) }}">
+                                    {{ cinema.cinemaname }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+</div>
+<style>
+    /* 外層容器樣式 */
+    .cinema-container {
+        border: 1px solid #ddd;
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    /* 右側清單樣式 */
+    .sidebar-list {
+        padding-left: 20px;
+        border-left: 1px solid #eee;
+    }
+
+    /* 地區標題顏色 (參考截圖中的金色) */
+    .region-title {
+        color: #b58900; 
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    /* 電影院名稱文字大小 */
+    .sidebar-list ul li {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    /* 圖片自適應 */
+    .img-responsive {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
 {% endblock %}

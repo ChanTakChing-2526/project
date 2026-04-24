@@ -26,18 +26,42 @@ def index():
 #def special():
     #return render_template("special.html.j2")
 
-@app.route("/cinema")
-def cinemas_api():
-    # 1. 從資料庫撈出所有電影院
+#@app.route("/cinema")
+#def cinemas_api():
     all_cinemas = Cinema.query.all()
     
-    # 2. 進行分組 (Group by region)
     grouped_cinemas = defaultdict(list)
     for cinema in all_cinemas:
         grouped_cinemas[cinema.region].append(cinema)
         
-    # 3. 傳遞給模板
     return render_template('cinema.html.j2', cinemas=grouped_cinemas)
+#@app.route('/cinema')
+#def cinemas():
+    cinema_data = {
+        "HK": ["MOVIE MOViE Pacific Place (Admiralty)", "MOVIE MOViE Cityplaza (Taikoo Shing)", "PALACE ifc"],
+        "KLN": ["GALA CINEMA (Langham Place)", "PREMIERE ELEMENTS", "B+ cinema MOKO (Mong Kok East)", "B+ cinema apm (Kwun Tong)", "CINEMATHEQUE", "MONGKOK"],
+        "NT": ["MY CINEMA YOHO MALL", "KWAI FONG", "TSUEN WAN", "KINGSWOOD"],
+        "Macau": ["Studio City Cinema"]
+    }
+    return render_template('cinema.html.j2', title='Cinema Locations', cinemas=cinema_data)
+@app.route('/cinema')
+def cinemas():
+    # 1. 從資料庫撈出所有電影院
+    all_cinemas = Cinema.query.all()
+    
+    # 2. 將資料按 region 分組
+    # 格式會變成: {"HK": [CinemaObj, ...], "KLN": [CinemaObj, ...]}
+    cinema_dict = defaultdict(list)
+    for c in all_cinemas:
+        cinema_dict[c.region].append(c)
+        
+    return render_template('cinema.html.j2', title='Cinema Locations', cinema_dict=cinema_dict)
+
+@app.route('/cinema/<int:id>')
+def cinema_detail(id):
+    # 使用 .get_or_404 處理找不到 id 的情況
+    cinema = Cinema.query.get_or_404(id)
+    return render_template('cinema_detail.html.j2', cinema=cinema)
 
 #@app.route("/gift_card_shop")
 #def gift_card_shop():
