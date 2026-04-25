@@ -1,17 +1,83 @@
 {% extends "base.html.j2" %}
 {% block app_content %} 
-        <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
-        <div class="container-fluid"> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
-                    <li><a href="/ticketing">Ticketing</a></li>
-                    <li><a href="/upcoming">Upcoming</a></li>
-                    <li><a href="/special">Special</a></li>
-                    <li><a href="/cinema">Cinema</a></li>
-                    <li><a href="#">Gift Card Shop</a></li>
-                </ul>
-            </div>
+<div class="movie-container">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <div class="movie-info">
+            <img src="{{ movie.poster_url }}" class="poster">
+            <h3>{{ movie.moviename }}</h3>
         </div>
-        <div style="height: 2px; background-color: red; width: 100%;"></div>
-    </nav>
-    <div><h1>Ticketing</h1></div>
+
+        <div class="showtimes-section">
+            {% for region, shows in movie.grouped_showtimes.items() %}
+                <div class="region-group">
+                    <div class="region-title">{{ region }}</div>
+                    <div class="grid-container">
+                        {% for show in shows %}
+                        <div class="screening-row">
+                            <span class="cinema">{{ show.cinema.cinemaname }}</span>
+                            <span class="date">{{ show.date }}</span>
+                            <span class="time">{{ show.start_time }}</span>
+                            <span class="format">{{ show.format }}</span>
+                            <span class="price">${{ show.price_base }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<style>
+.movie-container { width: 90%; margin: auto; }
+
+.movie-card {
+    display: flex; /* 讓左右區塊並排 */
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+    gap: 30px;
+}
+
+.movie-info { width: 25%; }
+.poster { width: 100%; height: auto; }
+
+.showtimes-section { width: 75%; }
+.screening-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+.movie-card {
+    display: flex; /* 保持左右大區塊 */
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+}
+
+.showtimes-section {
+    width: 75%;
+    padding-left: 20px;
+}
+
+/* 這是重點：CSS Grid */
+.grid-container {
+    display: grid;
+    /* 定義 5 個欄位的寬度，這樣就會永遠對齊 */
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr; 
+    gap: 10px;
+    align-items: center;
+}
+
+.screening-row {
+    display: contents; /* 讓 row 內的 span 直接繼承 grid-container 的格線 */
+}
+
+.region-title {
+    font-weight: bold;
+    color: #b38b59; /* Broadway 配色 */
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+}
+}</style>
 {% endblock %}

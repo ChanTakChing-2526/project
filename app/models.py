@@ -58,15 +58,16 @@ class Movie(db.Model):
     moviename = db.Column(db.String(128), index=True, unique=True)
     runtime = db.Column(db.Integer)
     category = db.Column(db.String(8))
-    language = db.Column(db.String(30))
+    language = db.Column(db.String(100))
     releasedate = db.Column(db.Integer, index=True)
     poster_url = db.Column(db.String(256))
     is_active = db.Column(db.Boolean, default=True)
     formats = db.Column(db.JSON)
+    is_festival = db.Column(db.Boolean, default=False)
 
     # Relationships
     events = db.relationship('Event', secondary='movie_event', back_populates='movies')
-    showtimes = db.relationship('Showtimes', back_populates='movie', lazy='dynamic')
+    showtimes = db.relationship('Showtimes', back_populates='movie', lazy='select')
 
     def __repr__(self):
         return f'<Movie {self.moviename}>'
@@ -145,8 +146,8 @@ class Showtimes(db.Model):
     cinema_id = db.Column(db.Integer, db.ForeignKey('cinema.id'), nullable=False)
     hall_id = db.Column(db.Integer, db.ForeignKey('halls.id'), nullable=False)
     
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
+    day= db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
     format_type = db.Column(db.String(50))
     price_base = db.Column(db.Float, nullable=False)
 

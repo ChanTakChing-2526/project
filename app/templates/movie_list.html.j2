@@ -1,7 +1,7 @@
 {% extends "base.html.j2" %}
 
 {% block app_content %}
-<div class="container mt-4">
+{#<div class="container mt-4">
     <h1 class="mb-4">{{ page_title }}</h1>
     
     {% if current_filter %}
@@ -75,5 +75,68 @@
         暫時沒有符合條件的電影。
     </div>
     {% endif %}
+</div>#}
+<style>
+    /* 強制設定每個電影項目的底部間距 */
+.movie-card-wrapper {
+    margin-bottom: 60px !important; /* 數字越大，間距越開 */
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0; /* 加一條淡淡的線，視覺上更乾淨 */
+}
+</style>
+<div class="row">
+    {% for movie in movies %}
+    <div class="col-12 movie-card-wrapper">
+        <div class="card shadow-sm border-0">
+            <div class="row g-0">
+                
+                <div class="col-md-3">
+                    {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" 
+                         class="img-fluid rounded-start h-100" 
+                         alt="{{ movie.moviename }}"
+                         style="object-fit: cover; height: 250px; width: 100%;">
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-5 p-3">
+                    <div class="card-body">
+                        <h4 class="card-title fw-bold">{{ movie.moviename }}</h4>
+                        <p class="text-muted my-3">
+                            {{ movie.runtime }} 分鐘 | {{ movie.language }} | {{ movie.category }}
+                        </p>
+                        {% if movie.formats %}
+                        <div class="mt-3">
+                            {% for fmt in movie.formats %}
+                                <span class="badge bg-light text-dark border me-2">{{ fmt }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4 border-start p-3 bg-light">
+                    <div class="card-body">
+                        <h6 class="text-primary mb-3 text-uppercase fw-bold">Showtimes</h6>
+                        {% if movie.showtimes %}
+                            {% for show in movie.showtimes[:3] %}
+                            <div class="d-flex justify-content-between align-items-center mb-2 py-1 border-bottom">
+                                <div>
+                                    <strong>{{ show.start_time.strftime('%H:%M') }}</strong><br>
+                                    <small class="text-muted">{{ show.format_type or "標準" }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">廳: {{ show.hall.hallname if show.hall else "" }}</small><br>
+                                    <span class="fw-bold text-danger">${{ show.price_base }}</span>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-danger">選座</a>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted small">暫無場次資料</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div> </div> </div> {% endfor %}
 </div>
 {% endblock %}

@@ -5,7 +5,8 @@ from urllib.parse import urlparse
 from sqlalchemy import asc
 
 from app import app, db
-from app.models import Cinema, Showtimes
+from app.models import Movie, Cinema, Showtimes
+from sqlalchemy.orm import selectinload
 from app.email import send_password_reset_email
 from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
@@ -18,7 +19,35 @@ def index():
 
 @app.route("/ticketing")
 def ticketing():
-    return render_template("ticketing.html.j2", itle="Ticketing")
+    # 這裡抓取「所有」上映中的電影
+    # 建議加入 filter，例如只抓 is_active=True 的電影
+    #all_movies = Movie.query.filter_by(is_active=True).all()
+    #all_movies = Movie.query.options(selectinload(Movie.showtimes)).filter_by(is_active=True).all()
+    
+    #return render_template("ticketing.html.j2", movies=all_movies)
+    
+    # 注意：這裡直接傳 movies=all_movies，而不是 movies_dict
+    # 這樣你的模板 {% for movie in movies %} 就能直接跑迴圈
+    #return render_template("movie_list.html.j2", movies=all_movies, page_title="上映中", current_filter="全部電影")
+    # 1. 撈出所有電影
+    all_movies = Movie.query.options(selectinload(Movie.showtimes)).filter_by(is_active=True).all()
+    
+    # 2. 【關鍵步驟】手動幫每個 movie 物件加上 .grouped_showtimes 屬性
+    for movie in all_movies:
+        # 建立一個暫存用的字典
+        grouped = defaultdict(list)
+        
+        # 將 showtimes 依照地區分組
+        for show in movie.showtimes:
+            # 確保 cinema 物件存在才取值，避免報錯
+            region = show.cinema.region if show.cinema else "未知地區"
+            grouped[region].append(show)
+            
+        # 把算好的資料「掛」到 movie 物件上，變成該物件的屬性
+        movie.grouped_showtimes = dict(grouped)
+    
+    # 3. 再把裝載好的 movies 傳給模板
+    return render_template("ticketing.html.j2", movies=all_movies)
 
 @app.route("/upcoming")
 def upcoming():
@@ -139,10 +168,20 @@ def events_list():
     return render_template('events_list.html.j2', events=events)
 
 
-@app.route('/events/<string:slug>')
-def event_detail(slug):
+#@app.route('/events/<string:slug>')
+#def event_detail(slug):
     event = Event.query.filter_by(slug=slug).first_or_404()
     return render_template('movie_list.html.j2',
                            movies=event.movies,
                            page_title=event.title,
                            current_filter=None)
+@app.route('/events/<string:slug>')
+def event_detail(slug):
+    # 這裡抓取「特定活動」
+    event = Event.query.filter_by(slug=slug).first_or_404()
+    
+    # 這裡只傳該活動關聯的 movies，模板會自動顯示這些電影
+    return render_template('movie_list.html.j2',
+                           movies=event.movies,
+                           page_title=event.title,
+                           current_filter="影展專題")

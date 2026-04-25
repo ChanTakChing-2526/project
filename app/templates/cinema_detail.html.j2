@@ -1,19 +1,6 @@
 {% extends "base.html.j2" %}
 
 {% block app_content %}
-    <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
-        <div class="container-fluid"> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
-                    <li><a href="/ticketing">Ticketing</a></li>
-                    <li><a href="/upcoming">Upcoming</a></li>
-                    <li><a href="/special">Special</a></li>
-                    <li><a href="/cinema">Cinema</a></li>
-                    <li><a href="#">Gift Card Shop</a></li>
-                </ul>
-            </div>
-        </div>
-        <div style="height: 2px; background-color: red; width: 100%;"></div>
-    </nav>
 <div class="container mt-4">
     <div class="position-relative mb-4">
         <img src="{{ cinema.image_url }}" 
