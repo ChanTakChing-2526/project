@@ -1,0 +1,71 @@
+{% extends "base.html.j2" %}
+
+{% block app_content %}
+<style>
+    .seat-grid { display: grid; grid-template-columns: repeat(10, 40px); gap: 10px; justify-content: center; margin-top: 20px; }
+    .seat { width: 40px; height: 40px; border: 1px solid #ccc; text-align: center; cursor: pointer; }
+    .booked { background-color: #ccc; cursor: not-allowed; }
+    .selected { background-color: #28a745; color: white; }
+</style>
+
+<h2>電影場次: {{ showtime.movie.moviename }}</h2>
+<p>影廳: {{ showtime.hall.hallname }} | 時間: {{ showtime.start_time }}</p>
+
+{#<form method="POST">
+    <input type="hidden" name="selected_seats" id="selected_seats_input">
+
+    <div class="seat-grid">
+        {% for seat in all_seats %}
+            {% if seat.id in booked_seat_ids %}
+                <div class="seat booked">{{ seat.row_code }}{{ seat.seat_number }}</div>
+            {% else %}
+                <div class="seat" data-id="{{ seat.id }}" onclick="toggleSeat(this)">
+                    {{ seat.row_code }}{{ seat.seat_number }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 30px;">
+        <button type="submit" class="btn btn-primary">確認購買</button>
+    </div>
+</form>#}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.selected_seats(id="selected_seats_input") }}
+
+    <div class="seat-grid">
+        {% for seat in all_seats %}
+            {% if seat.id in booked_seat_ids %}
+                <div class="seat booked">{{ seat.row_code }}{{ seat.seat_number }}</div>
+            {% else %}
+                <div class="seat" data-id="{{ seat.id }}" onclick="toggleSeat(this)">
+                    {{ seat.row_code }}{{ seat.seat_number }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 30px;">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+
+<script>
+    let selectedSeats = [];
+    function toggleSeat(element) {
+        const seatId = element.getAttribute('data-id');
+        if (element.classList.contains('selected')) {
+            element.classList.remove('selected');
+            selectedSeats = selectedSeats.filter(id => id !== seatId);
+        } else {
+            element.classList.add('selected');
+            selectedSeats.push(seatId);
+        }
+        // 更新隱藏欄位值
+        document.getElementById('selected_seats_input').value = selectedSeats.join(',');
+    }
+</script>
+
+{% endblock %}

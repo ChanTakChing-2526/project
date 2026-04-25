@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from app.models import User
 
@@ -40,3 +40,7 @@ class ResetPasswordForm(FlaskForm):
                               DataRequired(), EqualTo('password')])
     submit = SubmitField("Request Password Reset")
 
+class BookingForm(FlaskForm):
+    # 這是關鍵：我們用 HiddenField 來接收 JavaScript 傳過來的座位 ID 字串 (例如 "1,5,8")
+    selected_seats = HiddenField('Selected Seats', validators=[DataRequired(message="請至少選擇一個座位")])
+    submit = SubmitField('確認購買')

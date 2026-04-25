@@ -1,14 +1,14 @@
 from flask import render_template, redirect, flash, url_for, request, jsonify
 from collections import defaultdict
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from urllib.parse import urlparse
 from sqlalchemy import asc
 
 from app import app, db
-from app.models import Movie, Cinema, Showtimes
+from app.models import Movie, Cinema, Showtimes, Seats, Booking, Tickets
 from sqlalchemy.orm import selectinload
 from app.email import send_password_reset_email
-from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
+from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm, BookingForm
 from app.models import *
 
 
@@ -79,6 +79,33 @@ def cinema_detail(id):
 #@app.route("/gift_card_shop")
 #def gift_card_shop():
     #return render_template("gift_card_shop.html.j2")
+#/<int:showtime_id>
+@app.route('/booking/<int:showtime_id>', methods=['GET', 'POST'])
+@login_required
+def booking(showtime_id):
+    form = BookingForm()
+    
+    # 1. 執行查詢 (只執行一次)
+    showtime = Showtimes.query.get_or_404(showtime_id)
+    all_seats = Seats.query.filter_by(hall_id=showtime.hall_id).all()
+    booked_tickets = Tickets.query.join(Booking).filter(Booking.showtime_id == showtime_id).all()
+    booked_seat_ids = [ticket.seat_id for ticket in booked_tickets]
+
+    # 2. 處理表單送出 (POST 請求)
+    if form.validate_on_submit():
+        seat_data = form.selected_seats.data
+        # 這裡建議加一個檢查，確保 seat_data 不是空的
+        if seat_data:
+            seat_id_list = [int(s) for s in seat_data.split(',')]
+            
+            # --- 在這裡補上你的建立 Booking 與 Tickets 的資料庫邏輯 ---
+            # ...
+            
+            flash("訂票成功！")
+            return redirect(url_for('index')) # 或導向訂單確認頁面
+
+    # 3. 渲染頁面 (GET 請求或是表單驗證失敗時)
+    return render_template('booking.html.j2', form=form, showtime=showtime, all_seats=all_seats, booked_seat_ids=booked_seat_ids) # 記得傳入這個變數給前端畫座位圖
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
