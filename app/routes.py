@@ -20,9 +20,12 @@ def index():
 def ticketing():
     return render_template("ticketing.html.j2", itle="Ticketing")
 
-@app.route("/upcoming")
+@app.route('/upcoming')
 def upcoming():
-    return render_template("upcoming.html.j2")
+    movies = Movie.query.filter_by(is_active=False).all()   # 只顯示未上映
+    return render_template('upcoming.html.j2', 
+                           movies=movies,
+                           page_title="Coming Soon")
 
 @app.route("/special")
 def special():
