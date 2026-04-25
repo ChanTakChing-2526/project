@@ -1,17 +1,66 @@
 {% extends "base.html.j2" %}
-{% block app_content %} 
-        <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
-        <div class="container-fluid"> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
-                    <li><a href="/movies/">Ticketing</a></li>
-                    <li><a href="/upcoming">Upcoming</a></li>
-                    <li><a href="/events">Special</a></li>
-                    <li><a href="/cinema">Cinema</a></li>
-                    <li><a href="#">Gift Card Shop</a></li>
-                </ul>
+
+{% block title %}Coming Soon - Cinema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">🎟️ Coming Soon</h2>
+    <p class="text-muted mb-4">Movies that will be released soon</p>
+
+    <div class="row">
+        {% for movie in movies %}
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <!-- 左邊海報 -->
+                    <div class="col-md-3">
+                        {% if movie.poster_url %}
+                        <img src="{{ movie.poster_url }}" class="img-fluid h-100" style="object-fit: cover;" alt="{{ movie.moviename }}">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 200px;">
+                            <span class="text-muted">No Poster</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- 中間電影資訊 -->
+                    <div class="col-md-5">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ movie.moviename }}</h4>
+                            <p class="text-muted">
+                                {{ movie.runtime }} mins | {{ movie.category }} | {{ movie.language }}
+                            </p>
+                            <p class="text-muted small">Release Date: {{ movie.releasedate }}</p>
+
+                            <!-- 格式標籤 -->
+                            <div class="mb-3">
+                                {% for fmt in movie.formats %}
+                                <span class="badge bg-secondary me-1">{{ fmt }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <p class="card-text text-success fw-bold">Coming Soon</p>
+                        </div>
+                    </div>
+
+                    <!-- 右邊欄位 -->
+                    <div class="col-md-4 border-start">
+                        <div class="card-body">
+                            <h6 class="text-muted mb-3">Expected Showtimes</h6>
+                            <div class="small text-muted">
+                                Coming soon...<br>
+                                Stay tuned!
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div style="height: 2px; background-color: red; width: 100%;"></div>
-    </nav>
-    <div><h1>Upcoming</h1></div>
+        {% else %}
+        <div class="text-center py-5">
+            <h5 class="text-muted">No upcoming movies at the moment</h5>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
