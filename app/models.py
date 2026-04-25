@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-
+    points = db.Column(db.Integer, default=1000)
     bookings = db.relationship('Booking', backref='customer', lazy='dynamic')
 
     def __repr__(self) -> str:

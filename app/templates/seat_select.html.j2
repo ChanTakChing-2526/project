@@ -1,0 +1,93 @@
+{% extends "base.html.j2" %}
+
+{% block title %}選座 - {{ showtime.movie.moviename }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>選座 - {{ showtime.movie.moviename }}</h2>
+    <p class="text-muted">
+        {{ showtime.cinema.cinemaname }} • {{ showtime.hall.hallname }} • 
+        {{ showtime.start_time.strftime('%Y-%m-%d %H:%M') }}
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <h5 class="mb-4">銀幕</h5>
+            
+            <!-- 座位圖 -->
+            <div class="row g-2 justify-content-center" style="max-width: 620px; margin: 0 auto;">
+                {% for seat in seats %}
+                    <button onclick="toggleSeat(this, {{ seat.id }})" 
+                            class="btn m-1 seat-btn {% if seat.is_booked %}btn-danger disabled{% else %}btn-outline-success{% endif %}"
+                            style="width: 42px; height: 42px; font-size: 13px;">
+                        {{ seat.row_code }}{{ seat.seat_number }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <div class="mb-3">
+            已選 <strong id="selected-count">0</strong> 張 × 80 分 = 
+            <strong id="total-points">0</strong> 分
+        </div>
+        <button onclick="confirmMultiBooking()" class="btn btn-danger btn-lg px-5" id="confirm-btn" disabled>
+            確認購票
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedSeats = [];
+
+function toggleSeat(btn, seatId) {
+    if (btn.classList.contains('btn-danger')) return; // 已售出不能選
+
+    if (btn.classList.contains('btn-success')) {
+        // 取消選擇
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-outline-success');
+        selectedSeats = selectedSeats.filter(id => id !== seatId);
+    } else {
+        // 選擇
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-success');
+        selectedSeats.push(seatId);
+    }
+
+    // 更新顯示
+    document.getElementById('selected-count').textContent = selectedSeats.length;
+    document.getElementById('total-points').textContent = selectedSeats.length * 80;
+    document.getElementById('confirm-btn').disabled = selectedSeats.length === 0;
+}
+
+function confirmMultiBooking() {
+    if (selectedSeats.length === 0) return;
+    
+    const total = selectedSeats.length * 80;
+    if (!confirm(`確定要購買 ${selectedSeats.length} 張票？\n總共扣除 ${total} 積分`)) {
+        return;
+    }
+
+    // 發送請求
+    fetch('/book_tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            showtime_id: {{ showtime.id }},
+            seat_ids: selectedSeats
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.href = "{{ url_for('index') }}";
+        } else {
+            alert(data.message);
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -124,15 +124,23 @@ def reset_password(token):
 @app.route('/user/<username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    page = request.args.get("page", 1, type=int)
-    posts = user.followed_posts().paginate(
-        page=page, per_page=app.config["POSTS_PER_PAGE"], error_out=False)
-    next_url = url_for(
-        'index', page=posts.next_num) if posts.next_num else None
-    prev_url = url_for(
-        'index', page=posts.prev_num) if posts.prev_num else None
-    return render_template('user.html.j2', user=user, posts=posts.items,
-                           next_url=next_url, prev_url=prev_url)
+    
+    # 分頁顯示該用戶的訂票紀錄
+    page = request.args.get('page', 1, type=int)
+    bookings = user.bookings.order_by(Booking.created_at.desc()).paginate(
+        page=page, per_page=app.config.get('POSTS_PER_PAGE', 10), error_out=False)
+    
+    # 手動生成 next_url 和 prev_url
+    next_url = url_for('user', username=user.username, page=bookings.next_num) \
+        if bookings.has_next else None
+    prev_url = url_for('user', username=user.username, page=bookings.prev_num) \
+        if bookings.has_prev else None
+
+    return render_template('user.html.j2', 
+                           user=user, 
+                           bookings=bookings.items,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 # ====================== 活動功能 ======================
@@ -149,3 +157,72 @@ def event_detail(slug):
                            movies=event.movies,
                            page_title=event.title,
                            current_filter=None)
+
+
+# ====================== 訂票系統 - 選座頁面 ======================
+@app.route('/ticket_select/<int:showtime_id>')
+def ticket_select(showtime_id):
+    if not current_user.is_authenticated:
+        flash('請先登入才能購票', 'danger')
+        return redirect(url_for('login'))
+    
+    showtime = Showtimes.query.get_or_404(showtime_id)
+    seats = showtime.hall.seats.order_by(Seats.row_code, Seats.seat_number).all()
+    
+    return render_template('seat_select.html.j2', 
+                           showtime=showtime,
+                           seats=seats)
+
+# ====================== 多張票購票 API (一次買多個座位) ======================
+@app.route('/book_tickets', methods=['POST'])
+def book_tickets():
+    if not current_user.is_authenticated:
+        return jsonify({"success": False, "message": "請先登入才能購票"})
+
+    data = request.get_json()
+    showtime_id = data.get('showtime_id')
+    seat_ids = data.get('seat_ids', [])   # 支援多個 seat_id
+
+    if not seat_ids:
+        return jsonify({"success": False, "message": "請至少選擇一個座位"})
+
+    showtime = Showtimes.query.get_or_404(showtime_id)
+    total_price = len(seat_ids) * 80   # 每張 80 分
+
+    # 檢查積分是否足夠
+    if current_user.points < total_price:
+        return jsonify({"success": False, "message": f"積分不足！需要 {total_price} 分，你只有 {current_user.points} 分"})
+
+    # 建立訂單
+    booking = Booking(
+        user_id = current_user.id,
+        showtime_id = showtime_id,
+        total_price = total_price,
+        status = 'paid'
+    )
+    db.session.add(booking)
+    db.session.flush()
+
+    # 建立每張票 + 標記座位為已售
+    for seat_id in seat_ids:
+        ticket = Tickets(
+            booking_id = booking.id,
+            seat_id = seat_id,
+            ticket_code = f"TKT-{uuid.uuid4().hex[:8].upper()}"
+        )
+        db.session.add(ticket)
+
+        # 把座位標記為已售
+        seat = Seats.query.get(seat_id)
+        if seat:
+            seat.is_booked = True
+
+    # 扣除積分
+    current_user.points -= total_price
+
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": f"購票成功！已扣除 {total_price} 積分，購買 {len(seat_ids)} 張票"
+    })

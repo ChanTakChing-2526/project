@@ -1,76 +1,61 @@
 {% extends "base.html.j2" %}
 
-{% block app_content %}
+{% block title %}{{ page_title or "Ticketing" }}{% endblock %}
+
+{% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4">{{ page_title }}</h1>
+    <h2 class="mb-4">{{ page_title or "現正上映" }}</h2>
 
-    {% if current_filter %}
-    <p class="text-muted mb-4">目前篩選：{{ current_filter }}</p>
-    {% endif %}
-
-    {% for movie in movies %}
-    <div class="card mb-4 shadow-sm">
-        <div class="row g-0">
-            <!-- 左邊海報 -->
-            <div class="col-md-3">
-                {% if movie.poster_url %}
-                <img src="{{ movie.poster_url }}" class="img-fluid h-100" 
-                     alt="{{ movie.moviename }}" style="object-fit: cover; height: 240px;">
-                {% endif %}
-            </div>
-
-            <!-- 中間電影資訊 -->
-            <div class="col-md-5">
-                <div class="card-body">
-                    <h4 class="card-title">{{ movie.moviename }}</h4>
-                    <p class="text-muted">
-                        {{ movie.runtime }} 分鐘 ・ {{ movie.language }} ・ {{ movie.category }}
-                    </p>
-                    
-                    {% if movie.formats %}
-                    <div class="mb-3">
-                        {% for fmt in movie.formats %}
-                            <span class="badge bg-danger me-1">{{ fmt }}</span>
-                        {% endfor %}
+    <div class="row">
+        {% for movie in movies %}
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <!-- 左邊海報 -->
+                    <div class="col-md-3">
+                        <img src="{{ movie.poster_url }}" class="img-fluid h-100" style="object-fit: cover;" alt="{{ movie.moviename }}">
                     </div>
-                    {% endif %}
 
-                    <a href="#" class="btn btn-outline-primary btn-sm">查看預告</a>
-                </div>
-            </div>
+                    <!-- 中間電影資訊 -->
+                    <div class="col-md-5">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ movie.moviename }}</h4>
+                            <p class="text-muted">
+                                {{ movie.runtime }} 分鐘 | {{ movie.category }} | {{ movie.language }}
+                            </p>
 
-            <!-- 右邊場次列表 -->
-            <div class="col-md-4 border-start">
-                <div class="card-body">
-                    <h6 class="text-primary mb-3">場次時間</h6>
-                    
-                    {% if movie.showtimes %}
-                        {% for show in movie.showtimes[:4] %}   <!-- 最多顯示 4 個場次 -->
-                        <div class="d-flex justify-content-between align-items-center mb-3 py-1 border-bottom">
-                            <div>
-                                <strong>{{ show.start_time.strftime('%H:%M') }}</strong><br>
-                                <small class="text-muted">{{ show.format_type or "標準" }}</small>
+                            <div class="mb-3">
+                                {% for fmt in movie.formats %}
+                                <span class="badge bg-primary me-1">{{ fmt }}</span>
+                                {% endfor %}
                             </div>
-                            <div class="text-end">
-                                <small class="text-muted">影廳 {{ show.hall.hallname if show.hall else '-' }}</small><br>
-                                <span class="fw-bold text-danger">${{ show.price_base }}</span>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-danger">選座</a>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-muted small">暫無場次</p>
-                    {% endif %}
+                    </div>
+
+                    <!-- 右邊：場次列表 -->
+                    <div class="col-md-4 border-start">
+                        <div class="card-body">
+                            <h6 class="text-muted mb-3">可觀看場次</h6>
+                            {% if movie.showtimes %}
+                                {% for show in movie.showtimes[:5] %}   <!-- 最多顯示5個場次 -->
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>{{ show.start_time.strftime('%H:%M') }}</strong><br>
+                                        <small class="text-muted">{{ show.cinema.cinemaname }} • {{ show.hall.hallname }}</small>
+                                    </div>
+                                    <a href="{{ url_for('ticket_select', showtime_id=show.id) }}" 
+                                       class="btn btn-sm btn-danger">選座</a>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted small">暫無場次</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-
-    {% if not movies %}
-    <div class="alert alert-info text-center py-5">
-        暫時沒有符合條件的電影。
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
