@@ -16,9 +16,9 @@ from app.models import *
 def index():
     return render_template("index.html.j2", title="Home")
 
-@app.route("/ticketing")
-def ticketing():
-    return render_template("ticketing.html.j2", itle="Ticketing")
+#@app.route("/movies")
+#def ticketing():
+    #return render_template("movie_list.html.j2", itle="Ticketing")
 
 @app.route('/upcoming')
 def upcoming():

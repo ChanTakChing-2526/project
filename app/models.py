@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(256))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     points = db.Column(db.Integer, default=1000)
@@ -57,9 +57,9 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     moviename = db.Column(db.String(128), index=True, unique=True)
     runtime = db.Column(db.Integer)
-    category = db.Column(db.String(8))
-    language = db.Column(db.String(30))
-    releasedate = db.Column(db.Integer, index=True)
+    category = db.Column(db.String(32))
+    language = db.Column(db.String(128))
+    releasedate = db.Column(db.Date, index=True)
     poster_url = db.Column(db.String(256))
     is_active = db.Column(db.Boolean, default=True)
     formats = db.Column(db.JSON)
@@ -89,8 +89,7 @@ class Event(db.Model):
     end_date = db.Column(db.DateTime)
     banner_image = db.Column(db.String(300))
 
-    movies = db.relationship('Movie', secondary='movie_event',
-                             back_populates='events')
+    movies = db.relationship("Movie", secondary="movie_event", back_populates="events", cascade="all, delete")
 
     def __repr__(self):
         return f'<Event {self.title}>'
