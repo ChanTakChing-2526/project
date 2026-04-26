@@ -1,4 +1,218 @@
 {% extends "base.html.j2" %}
+
 {% block app_content %}
-    <h1>Hi</h1>
+<style>
+    body { background-color: #ffffff !important; margin: 0; }
+    
+    .hero-black-section { 
+        background-color: #000; 
+        padding: 30px 0; 
+    }
+
+    .carousel-inner, .carousel-inner .item img {
+        height: 320px !important; 
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .carousel-control {
+        width: 5%;
+        background-image: none !important;
+    }
+
+    .special-list {
+        display: flex;
+        flex-direction: column;
+        height: 320px; 
+        justify-content: space-between;
+        padding-left: 20px;
+    }
+    
+    .special-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 380px;
+        text-decoration: none;
+    }
+
+    .special-item img {
+        width: 380px;
+        height: 125px;
+        object-fit: cover;
+        border: 1px solid #333;
+        transition: opacity 0.3s;
+    }
+
+    .special-item img:hover { opacity: 0.8; }
+
+    .gold-label-fixed {
+        color: #f4d150;
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 8px;
+        display: block;
+        width: 380px;
+    }
+
+    .banner-title-style {
+        color: #f4d150;
+        font-weight: bold;
+        font-size: 22px;
+        margin-top: 15px;
+        text-align: center;
+        min-height: 35px;
+    }
+
+    .red-divider { height: 5px; background-color: #e60012; }
+    
+    .movie-link img {
+        transition: transform 0.3s;
+        width: 100%; 
+        border: 1px solid #eee;
+    }
+    
+    .movie-link img:hover { transform: scale(1.02); }
+
+    .sub-category-nav {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 30px;
+    }
+    .sub-category-nav li {
+        padding: 0 25px;
+        border-right: 1px solid #ddd;
+    }
+    .sub-category-nav li:last-child { border-right: none; }
+    .sub-category-nav a {
+        color: #000;
+        font-weight: bold;
+        font-size: 18px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .sub-category-nav a:hover { color: #e60012; }
+</style>
+
+<nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
+    <div class="container-fluid"> 
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
+                <li><a href="/movies/">Ticketing</a></li>
+                <li><a href="/upcoming">Upcoming</a></li>
+                <li><a href="/events">Special</a></li>
+                <li><a href="/cinema">Cinema</a></li>
+                <li><a href="/giftcardshop">Gift Card Shop</a></li>
+            </ul>
+        </div>
+    </div>
+    <div style="height: 2px; background-color: red; width: 100%;"></div>
+</nav>
+
+<div class="hero-black-section">
+    <div class="container">
+        <div class="row" style="display: flex; align-items: flex-start; justify-content: center;">
+            <div class="col-md-7">
+                <div id="balancedCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+                    <div class="carousel-inner">
+                        <div class="item active" data-title="復仇者聯盟：終局之戰">
+                            <a href="/movies/"><img src="{{ url_for('static', filename='1015-300x400.jpg') }}"></a>
+                        </div>
+                        <div class="item" data-title="沙丘：第二部">
+                            <a href="/movies/"><img src="{{ url_for('static', filename='301-300x400.jpg') }}"></a>
+                        </div>
+                        <div class="item" data-title="死侍與金鋼狼">
+                            <a href="/movies/"><img src="{{ url_for('static', filename='201-300x400.jpg') }}"></a>
+                        </div>
+                    </div>
+                    
+                    <a class="left carousel-control" href="#balancedCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#balancedCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+                <div id="banner-text" class="banner-title-style">復仇者聯盟：終局之戰</div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="special-list">
+                    <a href="/events" class="special-item">
+                        <img src="{{ url_for('static', filename='1015-300x400.jpg') }}">
+                        <span class="gold-label-fixed">4DX 限定場</span>
+                    </a>
+                    <a href="/events" class="special-item">
+                        <img src="{{ url_for('static', filename='301-300x400.jpg') }}">
+                        <span class="gold-label-fixed">特別推介</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="red-divider"></div>
+
+<ul class="sub-category-nav">
+    <li><a href="/movies/">Ticketing</a></li>
+    <li><a onclick="filterMovies('3d')">3D</a></li>
+    <li><a onclick="filterMovies('imax')">IMAX</a></li>
+    <li><a onclick="filterMovies('4dx')">4DX</a></li>
+    <li><a href="/events">Special</a></li>
+    <li><a href="/upcoming">Upcoming</a></li>
+</ul>
+
+<div class="container" style="margin-top: 30px;">
+    <div class="row" id="movie-grid">
+        <div class="col-md-3 col-sm-4 col-xs-6 movie-card" data-cat="3d imax 4dx" style="text-align: center; margin-bottom: 30px;">
+            <a href="/movies/" class="movie-link">
+                <img src="{{ url_for('static', filename='1015-300x400.jpg') }}">
+            </a>
+            <div style="margin-top: 10px; font-weight: bold;">復仇者聯盟：終局之戰</div>
+        </div>
+
+        <div class="col-md-3 col-sm-4 col-xs-6 movie-card" data-cat="imax 4dx" style="text-align: center; margin-bottom: 30px;">
+            <a href="/movies/" class="movie-link">
+                <img src="{{ url_for('static', filename='301-300x400.jpg') }}">
+            </a>
+            <div style="margin-top: 10px; font-weight: bold;">沙丘：第二部</div>
+        </div>
+
+        <div class="col-md-3 col-sm-4 col-xs-6 movie-card" data-cat="imax 4dx" style="text-align: center; margin-bottom: 30px;">
+            <a href="/movies/" class="movie-link">
+                <img src="{{ url_for('static', filename='201-300x400.jpg') }}">
+            </a>
+            <div style="margin-top: 10px; font-weight: bold;">死侍與金鋼狼</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterMovies(category) {
+        const cards = document.querySelectorAll('.movie-card');
+        cards.forEach(card => {
+            const categories = card.getAttribute('data-cat').split(' ');
+            if (categories.includes(category)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var carousel = document.getElementById('balancedCarousel');
+        var textDisplay = document.getElementById('banner-text');
+        
+        $(carousel).on('slid.bs.carousel', function () {
+            var activeItem = carousel.querySelector('.item.active');
+            var title = activeItem.getAttribute('data-title');
+            if (title) textDisplay.innerText = title;
+        });
+    });
+</script>
 {% endblock %}
