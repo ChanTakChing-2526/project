@@ -27,9 +27,9 @@ def upcoming():
                            movies=movies,
                            page_title="Coming Soon")
 
-@app.route("/special")
-def special():
-    return render_template("special.html.j2")
+#@app.route("/special")
+#def special():
+    #return render_template("special.html.j2")
 
 @app.route('/cinema')
 def cinemas():
