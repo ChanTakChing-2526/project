@@ -95,6 +95,11 @@
         cursor: pointer;
     }
     .sub-category-nav a:hover { color: #e60012; }
+
+    .cinema-video {
+    height: 400px;       /* 統一高度 */
+    object-fit: cover;   /* 保持比例並裁切 */
+    }
 </style>
 
 <div class="hero-black-section">
@@ -104,17 +109,17 @@
                 <div id="balancedCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
                     <div class="carousel-inner">
                         <div class="item active" data-title="寒戰 1994">
-                            <a href="/movies/"><video class="w-100 rounded" height="400" controls autoplay muted>
+                            <a href="/movies/"><video class="w-100 rounded cinema-video" controls autoplay muted>
                                 <source src="https://trailer.cinema.com.hk/trailer/2026-05-01ColdWar1994_Trailer02_Online.mp4" type="video/mp4">
                                     Your browser does not support the video tag.</video></a>
                         </div>
                         <div class="item" data-title="穿PRADA的惡魔2">
-                            <a href="/movies/"><video class="w-100 rounded" height="400" controls autoplay muted>
+                            <a href="/movies/"><video class="w-100 rounded cinema-video" controls autoplay muted>
                                 <source src="https://trailer.cinema.com.hk/trailer/2026-04-29TheDevilWearsPrada2_TrailerB.mp4" type="video/mp4">
                                     Your browser does not support the video tag.</video></a>
                         </div>
                         <div class="item" data-title="《夜王》（導演版）">
-                            <a href="/movies/"><video class="w-100 rounded" height="400" controls autoplay muted>
+                            <a href="/movies/"><video class="w-100 rounded cinema-video" controls autoplay muted>
                                 <source src="https://trailer.cinema.com.hk/trailer/2026-04-16NightKing.mp4" type="video/mp4">
                                     Your browser does not support the video tag.</video></a>
                         </div>
