@@ -14,7 +14,8 @@ from app.models import *
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index")
 def index():
-    return render_template("index.html.j2", title="Home")
+    movies = Movie.query.filter_by(is_active=True).all() 
+    return render_template("index.html.j2", title="Home", movies = movies)
 
 #@app.route("/movies")
 #def ticketing():

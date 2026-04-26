@@ -13,7 +13,7 @@
                 <div class="row g-0">
                     <!-- 左邊海報 -->
                     <div class="col-md-3">
-                        <img src="{{ movie.poster_url }}" class="img-fluid h-100" style="object-fit: cover;" alt="{{ movie.moviename }}">
+                        <img src="{{ movie.poster_url }}" alt="{{ movie.moviename }}" class="poster-img">
                     </div>
 
                     <!-- 中間電影資訊 -->
@@ -58,4 +58,13 @@
         {% endfor %}
     </div>
 </div>
+
+<style>
+.poster-img {
+    width: 100%;
+    height: 400px;       /* 統一高度 */
+    object-fit: cover;   /* 保持比例並裁切 */
+    border-radius: 8px;  /* 可選，讓邊角圓滑 */
+}
+</style>
 {% endblock %}
