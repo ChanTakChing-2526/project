@@ -1,6 +1,5 @@
-
 from app import db, app
-from app.models import Movie, Event, Cinema, Halls, Seats, Showtimes, User, Booking, Tickets
+from app.models import Movie, Event, Cinema, Halls, Seats, Showtimes, User, Booking, Tickets, GiftCard
 from datetime import datetime, timedelta, date
 from sqlalchemy import text
 import random
@@ -135,6 +134,12 @@ with app.app_context():
             user.points = points
     db.session.commit()
     print("✅ 已建立測試用戶")
+
+    # ====================== 6. 插入 GiftCard 測試資料 ======================
+    card = GiftCard(card_number="1234567890123456", pin="1234", balance=500.0)
+    db.session.add(card)
+    db.session.commit()
+    print("✅ 已建立測試 GiftCard")
 
     print("\n🎉 所有資料已成功插入！")
     print("你可以開始使用 Ticketing、Upcoming、Events、Cinema、Profile 等功能")
