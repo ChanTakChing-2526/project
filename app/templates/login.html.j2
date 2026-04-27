@@ -114,7 +114,7 @@
                     <div class="checkbox" style="margin-top: -5px; font-size: 13px;">
                         <label>{{ form.remember_me() }} Remember Me</label>
                     </div>
-                    <a href="{{ url_for('register') }}" class="link-forget">Forget Password?</a>
+                    <a href="{{ url_for('reset_password_request') }}" class="link-forget">Forget Password?</a>
                     {{ form.submit(class="btn btn-custom-login", value="Login") }}
                     <div class="or-divider">Or</div>
                     <a href="{{ url_for('register') }}" class="btn btn-custom-register">Register</a>

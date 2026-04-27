@@ -1,3 +1,4 @@
+from datetime import date
 from flask import render_template, redirect, flash, url_for, request, jsonify
 from collections import defaultdict
 from flask_login import current_user, login_user, logout_user
@@ -53,7 +54,8 @@ def login():
         next_page = request.args.get("next")
         if not next_page or urlparse(next_page).netloc != "":
             next_page = url_for('index')
-        redirect(next_page)
+        return redirect(next_page) 
+        
     return render_template('login.html.j2', show_secondary_navbar=True, title="Sign In", form=form)
 
 @app.route("/logout")
@@ -65,14 +67,31 @@ def logout():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+    
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(
+            username=form.username.data,
+            email=form.email.data, 
+            given_name=form.given_name.data,
+            surname=form.surname.data,
+            gender=form.gender.data
+        )
+        
         user.set_password(form.password.data)
+        
+        user.birth_date = date(
+            int(form.year.data), 
+            int(form.month.data), 
+            int(form.day.data)
+        )
+        
         db.session.add(user)
         db.session.commit()
-        flash('Congraduations, you are now a registered user!')
+        
+        flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
+        
     return render_template('register.html.j2', show_secondary_navbar=True, title="Register", form=form)
 
 @app.route("/reset_password_request", methods=['GET', 'POST'])
