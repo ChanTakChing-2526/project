@@ -214,7 +214,7 @@ def gift_card():
                     card.balance = 0
                     card.is_active = False
                     db.session.commit()
-                    flash(f"Success! Added ${redeem_amount:.2f} to User ID {user_id}", "success")
+                    flash(f"Success! Added {redeem_amount:.2f} point to User ID {user_id}", "success")
                 else:
                     flash("User not found.", "danger")
 
