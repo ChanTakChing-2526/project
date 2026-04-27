@@ -1,67 +1,128 @@
 {% extends 'bootstrap/base.html' %}
+
 {% block title %}
-    {% if title %}
-        {{ title }} - Microblog
-    {% else %}
-        Welcome to Microblog
-    {% endif %}
+
+{% if title %}
+
+{{ title }} - Microblog
+
+{% else %}
+
+Welcome to Microblog
+
+{% endif %}
+
 {% endblock title %}
 
+
+
 {% block navbar %}
+
 <style>
-    .top-auth-bar {
-        background-color: #444; 
-        color: #fff;
-        font-size: 12px;
-        
-        border-top: 3px solid #ed4e51;
-        margin-top: 0;
 
-        padding: 8px 50px 8px 0;
-        text-align: right;
-    }
-    
-    .top-auth-bar a {
-        color: #fff;
-        text-decoration: none;
-        margin: 0 10px;
-    }
+.top-auth-bar {
 
-    .navbar-custom {
-        margin-bottom: 0;
-        border: none;
-        border-radius: 0;
-        background-color: #fff;
-        min-height: 40px;
-    }
-    
-    .navbar-custom .nav > li > a {
-        padding-top: 15px;
-        padding-bottom: 15px;
-        font-size: 16px;
-        font-weight: bold;
-        color: #000;
-    }
+background-color: #444;
+
+color: #fff;
+
+font-size: 12px;
+
+
+border-top: 3px solid #ed4e51;
+
+margin-top: 0;
+
+
+
+padding: 8px 50px 8px 0;
+
+text-align: right;
+
+}
+
+
+.top-auth-bar a {
+
+color: #fff;
+
+text-decoration: none;
+
+margin: 0 10px;
+
+}
+
+
+
+.navbar-custom {
+
+margin-bottom: 0;
+
+border: none;
+
+border-radius: 0;
+
+background-color: #fff;
+
+min-height: 40px;
+
+}
+
+
+.navbar-custom .nav > li > a {
+
+padding-top: 15px;
+
+padding-bottom: 15px;
+
+font-size: 16px;
+
+font-weight: bold;
+
+color: #000;
+
+}
+
 </style>
 
+
+
 <div class="top-auth-bar">
-    {% if current_user.is_anonymous %}
-        <a href="/login">Login</a> | 
-        <a href="/register">Register</a>
-    {% else %}
-    <a href="/user/{{ current_user.username }}">User: {{ current_user.username }}</a> | 
-    <a href="/logout">Logout</a>
-    {% endif %}
+
+{% if current_user.is_anonymous %}
+
+<a href="/login">Login</a> |
+
+<a href="/register">Register</a>
+
+{% else %}
+
+<a href="/user/{{ current_user.username }}">User: {{ current_user.username }}</a> |
+
+<a href="/logout">Logout</a>
+
+{% endif %}
+
 </div>
 
+
+
 <nav class="navbar navbar-default navbar-custom">
-    <div class="container">
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                </ul>
-        </div>
-    </div>
+
+<div class="container">
+
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+<ul class="nav navbar-nav">
+
+<li><a href="{{ url_for('index') }}">Home</a></li>
+
+</ul>
+
+</div>
+
+</div>
+
 </nav>
 
     <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
@@ -80,9 +141,14 @@
 
 {% endblock navbar %}
 
-{% block content %}
-    <div class="container">
-        {% block app_content %}{% endblock app_content %}
-    </div>
-{% endblock %}
 
+
+{% block content %}
+
+<div class="container">
+
+{% block app_content %}{% endblock app_content %}
+
+</div>
+
+{% endblock %}
