@@ -200,22 +200,6 @@
     }
 </style>
 
-<!-- 導航欄 -->
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-center">
-                <li><a href="/movies">Ticketing</a></li> <!-- 統一無尾斜線 -->
-                <li><a href="/upcoming">Upcoming</a></li>
-                <li><a href="/events">Special</a></li>
-                <li><a href="/cinema">Cinema</a></li>
-                <li><a href="/gift_card">Gift Card Shop</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="red-line-top"></div>
-</nav>
-
 <div class="tabs-row">
     <button class="tab-btn active" id="tab-check" onclick="switchTab('check')">Check Balance</button>
     <button class="tab-btn" id="tab-setup" onclick="switchTab('setup')">Setup Password</button>
@@ -224,7 +208,6 @@
 <div class="box-container">
     <div class="red-v-accent"></div>
 
-    <!-- 顯示Flash成功提示 -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -237,15 +220,13 @@
         {% endif %}
     {% endwith %}
 
-    <!-- 錯誤提示 - 聯動後端error變量 -->
     <div id="error-container" class="error-box">
         <p>{{ error or 'Invalid Gift Card Number or Password.' }}</p>
     </div>
 
-    <!-- Check Balance 表單 -->
     <div id="content-check">
         <div class="section-title">Check Gift Card Balance</div>
-        <form method="POST" action="/gift_card"> <!-- 提交到統一路由 -->
+        <form method="POST" action="/gift_card">
             <div class="form-group">
                 <label>Gift Card No.</label>
                 <input type="text" name="card_number" required placeholder="Enter 16-digit card number">
@@ -266,10 +247,9 @@
         </form>
     </div>
 
-    <!-- Setup Password 表單（提交到同一個/gift_card路由） -->
     <div id="content-setup" style="display:none;">
         <div class="section-title">Setup Password</div>
-        <form method="POST" action="/gift_card"> <!-- 核心修改：移除/setup，提交到統一路由 -->
+        <form method="POST" action="/gift_card">
             <div class="form-group">
                 <label>Gift Card No.</label>
                 <input type="text" name="setup_card_number" required placeholder="Enter 16-digit card number">
@@ -289,7 +269,6 @@
 </div>
 
 <script>
-    // 切換標籤頁邏輯
     function switchTab(type) {
         const checkBtn = document.getElementById('tab-check');
         const setupBtn = document.getElementById('tab-setup');
@@ -297,7 +276,6 @@
         const setupContent = document.getElementById('content-setup');
         const footerNote = document.getElementById('footer-link-note');
 
-        // 隱藏錯誤提示
         document.getElementById('error-container').style.display = 'none';
 
         if (type === 'check') {
@@ -315,7 +293,6 @@
         }
     }
 
-    // 頁面加載初始化
     window.onload = function() {
         {% if error %}
             document.getElementById('error-container').style.display = 'block';
