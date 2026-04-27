@@ -1,20 +1,20 @@
 {% extends "base.html.j2" %}
 
-{% block title %}{{ user.username }} 的個人資料{% endblock %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>{{ user.username }} 的個人資料</h2>
+    <h2>{{ user.username }}'s Profile</h2>
 
     <div class="card mb-4">
         <div class="card-body">
-            <p><strong>Email：</strong> {{ user.email }}</p>
-            <p><strong>積分：</strong> <span class="badge bg-success fs-5">{{ user.points or 0 }} 分</span></p>
-            <p><strong>註冊日期：</strong> {{ user.last_seen.strftime('%Y-%m-%d') }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Points:</strong> <span class="badge bg-success fs-5">{{ user.points or 0 }} 分</span></p>
+            <p><strong>Last Seen:</strong> {{ user.last_seen.strftime('%Y-%m-%d') }}</p>
         </div>
     </div>
 
-    <h4>我的訂票紀錄</h4>
+    <h4>My Booking History</h4>
 
     {% if bookings %}
         {% for booking in bookings %}
@@ -23,15 +23,15 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h5 class="card-title">
-                            {{ booking.showtime.movie.moviename if booking.showtime and booking.showtime.movie else '未知電影' }}
+                            {{ booking.showtime.movie.moviename if booking.showtime and booking.showtime.movie else 'Unknown Movie' }}
                         </h5>
                         <p class="text-muted">
-                            {{ booking.showtime.cinema.cinemaname if booking.showtime and booking.showtime.cinema else '未知戲院' }} 
+                            {{ booking.showtime.cinema.cinemaname if booking.showtime and booking.showtime.cinema else 'Unknown Cinema' }} 
                             • {{ booking.showtime.hall.hallname if booking.showtime and booking.showtime.hall else '' }}
                         </p>
                         <p>
-                            <strong>時間：</strong> 
-                            {{ booking.showtime.start_time.strftime('%Y-%m-%d %H:%M') if booking.showtime else '未知時間' }}
+                            <strong>Time:</strong> 
+                            {{ booking.showtime.start_time.strftime('%Y-%m-%d %H:%M') if booking.showtime else 'Unknown Time' }}
                         </p>
                     </div>
                     <div class="col-md-4 text-end">
@@ -41,9 +41,8 @@
                     </div>
                 </div>
 
-                <!-- 座位列表 -->
                 <div class="mt-3">
-                    <strong>座位：</strong>
+                    <strong>Seats:</strong>
                     {% for ticket in booking.tickets %}
                         <span class="badge bg-info me-1">
                             {{ ticket.seat.row_code }}{{ ticket.seat.seat_number }}
@@ -54,16 +53,15 @@
         </div>
         {% endfor %}
 
-        <!-- 分頁 -->
         <nav>
             <ul class="pagination">
-                {% if prev_url %}<li class="page-item"><a class="page-link" href="{{ prev_url }}">上一頁</a></li>{% endif %}
-                {% if next_url %}<li class="page-item"><a class="page-link" href="{{ next_url }}">下一頁</a></li>{% endif %}
+                {% if prev_url %}<li class="page-item"><a class="page-link" href="{{ prev_url }}">Previous</a></li>{% endif %}
+                {% if next_url %}<li class="page-item"><a class="page-link" href="{{ next_url }}">Next</a></li>{% endif %}
             </ul>
         </nav>
 
     {% else %}
-        <p class="text-muted">暫時沒有訂票紀錄。</p>
+        <p class="text-muted">No booking records yet.</p>
     {% endif %}
 </div>
 {% endblock %}

@@ -13,14 +13,12 @@ from app.email import send_password_reset_email
 @app.route("/index")
 def index():
     movies = Movie.query.filter_by(is_active=True).all() 
-    return render_template("index.html.j2", title="Home", movies = movies)
+    return render_template("index.html.j2", show_secondary_navbar=False, title="Home", movies = movies)
 
 @app.route('/upcoming')
 def upcoming():
     movies = Movie.query.filter_by(is_active=False).all()
-    return render_template('upcoming.html.j2', 
-                           movies=movies,
-                           page_title="Coming Soon")
+    return render_template('upcoming.html.j2', show_secondary_navbar=True, movies=movies, page_title="Coming Soon")
 
 @app.route('/cinema')
 def cinemas():
@@ -30,13 +28,13 @@ def cinemas():
     for c in all_cinemas:
         cinema_dict[c.region].append(c)
         
-    return render_template('cinema.html.j2', title='Cinema Locations', cinema_dict=cinema_dict)
+    return render_template('cinema.html.j2', show_secondary_navbar=True, title='Cinema Locations', cinema_dict=cinema_dict)
 
 @app.route('/cinema/<int:id>')
 def cinema_detail(id):
     cinema = Cinema.query.get_or_404(id)
     showtimes = cinema.showtimes.order_by(Showtimes.movie_id, Showtimes.start_time).all()
-    return render_template('cinema_detail.html.j2', cinema=cinema)
+    return render_template('cinema_detail.html.j2', show_secondary_navbar=True, cinema=cinema)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -56,7 +54,7 @@ def login():
         if not next_page or urlparse(next_page).netloc != "":
             next_page = url_for('index')
         redirect(next_page)
-    return render_template('login.html.j2', title="Sign In", form=form)
+    return render_template('login.html.j2', show_secondary_navbar=True, title="Sign In", form=form)
 
 @app.route("/logout")
 def logout():
@@ -75,7 +73,7 @@ def register():
         db.session.commit()
         flash('Congraduations, you are now a registered user!')
         return redirect(url_for('login'))
-    return render_template('register.html.j2', title="Register", form=form)
+    return render_template('register.html.j2', show_secondary_navbar=True, title="Register", form=form)
 
 @app.route("/reset_password_request", methods=['GET', 'POST'])
 def reset_password_request():
@@ -88,7 +86,7 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset password.')
         return redirect(url_for('login'))
-    return render_template('reset_password_request.html.j2', title="Reset Password", form=form)
+    return render_template('reset_password_request.html.j2', show_secondary_navbar=True, title="Reset Password", form=form)
 
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_password(token):
@@ -103,7 +101,7 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password.html.j2', title="Reset Password", form=form)
+    return render_template('reset_password.html.j2', show_secondary_navbar=True, title="Reset Password", form=form)
 
 @app.route('/user/<username>')
 def user(username):
@@ -118,30 +116,19 @@ def user(username):
     prev_url = url_for('user', username=user.username, page=bookings.prev_num) \
         if bookings.has_prev else None
 
-    return render_template('user.html.j2', 
-                           user=user, 
-                           bookings=bookings.items,
-                           next_url=next_url,
-                           prev_url=prev_url)
+    return render_template('user.html.j2', show_secondary_navbar=True, user=user, bookings=bookings.items,next_url=next_url,prev_url=prev_url)
 
-
-# ====================== 活動功能 ======================
 @app.route('/events')
 def events_list():
     events = Event.query.order_by(Event.start_date.desc()).all()
-    return render_template('events_list.html.j2', events=events)
+    return render_template('events_list.html.j2', show_secondary_navbar=True, events=events)
 
 
 @app.route('/events/<string:slug>')
 def event_detail(slug):
     event = Event.query.filter_by(slug=slug).first_or_404()
-    return render_template('movie_list.html.j2',
-                           movies=event.movies,
-                           page_title=event.title,
-                           current_filter=None)
+    return render_template('movie_list.html.j2', show_secondary_navbar=True, movies=event.movies, page_title=event.title, current_filter=None)
 
-
-# ====================== 訂票系統 - 選座頁面 ======================
 @app.route('/ticket_select/<int:showtime_id>')
 def ticket_select(showtime_id):
     if not current_user.is_authenticated:
@@ -151,11 +138,8 @@ def ticket_select(showtime_id):
     showtime = Showtimes.query.get_or_404(showtime_id)
     seats = showtime.hall.seats.order_by(Seats.row_code, Seats.seat_number).all()
     
-    return render_template('seat_select.html.j2', 
-                           showtime=showtime,
-                           seats=seats)
+    return render_template('seat_select.html.j2', show_secondary_navbar=True, showtime=showtime, seats=seats)
 
-# ====================== 多張票購票 API (一次買多個座位) ======================
 @app.route('/book_tickets', methods=['POST'])
 def book_tickets():
     if not current_user.is_authenticated:
@@ -204,7 +188,6 @@ def book_tickets():
         "message": f"購票成功！已扣除 {total_price} 積分，購買 {len(seat_ids)} 張票"
     })
 
-# ====================== 禮品卡 ======================
 @app.route("/gift_card", methods=["GET", "POST"])
 def gift_card():
     error = None
@@ -234,4 +217,4 @@ def gift_card():
                 else:
                     error = "無效的禮品卡號"
 
-    return render_template("gift_card.html.j2", error=error, title="禮品卡查詢")
+    return render_template("gift_card.html.j2", show_secondary_navbar=True, error=error, title="Gift Card")

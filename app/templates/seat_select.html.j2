@@ -1,10 +1,10 @@
 {% extends "base.html.j2" %}
 
-{% block title %}選座 - {{ showtime.movie.moviename }}{% endblock %}
+{% block title %}Seat Selection - {{ showtime.movie.moviename }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>選座 - {{ showtime.movie.moviename }}</h2>
+    <h2>Seat Selection - {{ showtime.movie.moviename }}</h2>
     <p class="text-muted">
         {{ showtime.cinema.cinemaname }} • {{ showtime.hall.hallname }} • 
         {{ showtime.start_time.strftime('%Y-%m-%d %H:%M') }}
@@ -12,9 +12,8 @@
 
     <div class="card mb-4">
         <div class="card-body text-center">
-            <h5 class="mb-4">銀幕</h5>
+            <h5 class="mb-4">Screen</h5>
             
-            <!-- 座位圖 -->
             <div class="row g-2 justify-content-center" style="max-width: 620px; margin: 0 auto;">
                 {% for seat in seats %}
                     <button onclick="toggleSeat(this, {{ seat.id }})" 
@@ -29,11 +28,11 @@
 
     <div class="text-center mt-4">
         <div class="mb-3">
-            已選 <strong id="selected-count">0</strong> 張 × 80 分 = 
-            <strong id="total-points">0</strong> 分
+            Selected <strong id="selected-count">0</strong> tickets x 80 points = 
+            <strong id="total-points">0</strong> points
         </div>
         <button onclick="confirmMultiBooking()" class="btn btn-danger btn-lg px-5" id="confirm-btn" disabled>
-            確認購票
+            Confirm ticket purchase
         </button>
     </div>
 </div>
@@ -42,21 +41,18 @@
 let selectedSeats = [];
 
 function toggleSeat(btn, seatId) {
-    if (btn.classList.contains('btn-danger')) return; // 已售出不能選
+    if (btn.classList.contains('btn-danger')) return;
 
     if (btn.classList.contains('btn-success')) {
-        // 取消選擇
         btn.classList.remove('btn-success');
         btn.classList.add('btn-outline-success');
         selectedSeats = selectedSeats.filter(id => id !== seatId);
     } else {
-        // 選擇
         btn.classList.remove('btn-outline-success');
         btn.classList.add('btn-success');
         selectedSeats.push(seatId);
     }
 
-    // 更新顯示
     document.getElementById('selected-count').textContent = selectedSeats.length;
     document.getElementById('total-points').textContent = selectedSeats.length * 80;
     document.getElementById('confirm-btn').disabled = selectedSeats.length === 0;
@@ -66,11 +62,10 @@ function confirmMultiBooking() {
     if (selectedSeats.length === 0) return;
     
     const total = selectedSeats.length * 80;
-    if (!confirm(`確定要購買 ${selectedSeats.length} 張票？\n總共扣除 ${total} 積分`)) {
-        return;
-    }
+    if (!confirm(`Please confirm your purchase of ${selectedSeats.length} tickets.\nA total of ${total} points will be deducted.\nThank you for your order!`)) {
+    return;
+}
 
-    // 發送請求
     fetch('/book_tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

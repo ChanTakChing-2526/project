@@ -1,154 +1,181 @@
 {% extends 'bootstrap/base.html' %}
-
 {% block title %}
-
-{% if title %}
-
-{{ title }} - Microblog
-
-{% else %}
-
-Welcome to Microblog
-
-{% endif %}
-
+    {% if title %}
+        {{ title }} - Broadway Circuit
+    {% else %}
+        Welcome to Broadway Circuit
+    {% endif %}
 {% endblock title %}
-
-
-
 {% block navbar %}
-
-<style>
-
-.top-auth-bar {
-
-background-color: #444;
-
-color: #fff;
-
-font-size: 12px;
+    <style>
+    footer {
+        margin-top: 40px;
+        background-color: #444;
+        color: #fff;
+        padding-top: 10px;
+    }
 
 
-border-top: 3px solid #ed4e51;
+    .top-auth-bar {
+        background-color: #444; 
+        color: #fff;
+        font-size: 12px;        
+        border-top: 3px solid #ed4e51;
+        margin-top: 0;
+        padding: 8px 50px 8px 0;
+        text-align: right;
+    }
+    
+    .top-auth-bar a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 10px;
+    }
 
-margin-top: 0;
-
-
-
-padding: 8px 50px 8px 0;
-
-text-align: right;
-
-}
-
-
-.top-auth-bar a {
-
-color: #fff;
-
-text-decoration: none;
-
-margin: 0 10px;
-
-}
-
-
-
-.navbar-custom {
-
-margin-bottom: 0;
-
-border: none;
-
-border-radius: 0;
-
-background-color: #fff;
-
-min-height: 40px;
-
-}
-
-
-.navbar-custom .nav > li > a {
-
-padding-top: 15px;
-
-padding-bottom: 15px;
-
-font-size: 16px;
-
-font-weight: bold;
-
-color: #000;
-
-}
-
-</style>
-
-
-
-<div class="top-auth-bar">
-
-{% if current_user.is_anonymous %}
-
-<a href="/login">Login</a> |
-
-<a href="/register">Register</a>
-
-{% else %}
-
-<a href="/user/{{ current_user.username }}">User: {{ current_user.username }}</a> |
-
-<a href="/logout">Logout</a>
-
-{% endif %}
-
-</div>
-
-
-
-<nav class="navbar navbar-default navbar-custom">
-
-<div class="container">
-
-<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-<ul class="nav navbar-nav">
-
-<li><a href="{{ url_for('index') }}">Home</a></li>
-
-</ul>
-
-</div>
-
-</div>
-
-</nav>
-
-    <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
-        <div class="container-fluid"> <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-center" style="display: flex; justify-content: center; float: none;">
-                    <li><a href="/movies/">Ticketing</a></li>
-                    <li><a href="/upcoming">Upcoming</a></li>
-                    <li><a href="/events">Special</a></li>
-                    <li><a href="/cinema">Cinema</a></li>
-                    <li><a href="/gift_card">Gift Card Shop</a></li>
+    .navbar-custom {
+        margin-bottom: 0;
+        border: none;
+        border-radius: 0;
+        background-color: #fff;
+        min-height: 40px;
+    }
+    
+    .navbar-custom .nav > li > a {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #000;
+    }
+    </style>
+    <div class="top-auth-bar">
+        {% if current_user.is_anonymous %}
+            <a href="/login">Login</a> |
+            <a href="/register">Register</a>
+        {% else %}
+            <a href="/user/{{ current_user.username }}">User: {{ current_user.username }}</a> |
+            <a href="/logout">Logout</a>
+        {% endif %}
+    </div>
+    <nav class="navbar navbar-default navbar-custom">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="{{ url_for('index') }}">Home</a>
+                    </li>
                 </ul>
             </div>
         </div>
-        <div style="height: 2px; background-color: red; width: 100%;"></div>
     </nav>
-
+    {% if show_secondary_navbar %}
+        <nav class="navbar navbar-default" style="border: none; margin-bottom: 0;">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-center"
+                        style="display: flex;
+                               justify-content: center;
+                               float: none">
+                        <li>
+                            <a href="/movies/">Ticketing</a>
+                        </li>
+                        <li>
+                            <a href="/upcoming">Upcoming</a>
+                        </li>
+                        <li>
+                            <a href="/events">Special</a>
+                        </li>
+                        <li>
+                            <a href="/cinema">Cinema</a>
+                        </li>
+                        <li>
+                            <a href="/gift_card">Gift Card Shop</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="height: 2px; background-color: red; width: 100%;"></div>
+        </nav>
+    {% endif %}
 {% endblock navbar %}
-
-
-
 {% block content %}
-
-<div class="container">
-
-{% block app_content %}{% endblock app_content %}
-
-</div>
-
+    <div class="d-flex flex-column min-vh-100">
+        <main class="flex-grow-1">
+            <div class="container">
+                {% block app_content %}
+                {% endblock app_content %}
+            </div>
+        </main>
+        <footer class="bg-light text-dark mt-5 pt-4 pb-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="#">About Us</a>
+                            </li>
+                            <li>
+                                <a href="#">Join Us</a>
+                            </li>
+                            <li>
+                                <a href="#">Sign Up</a>
+                            </li>
+                            <li>
+                                <a href="#">Forget Your Password</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="#">Privacy Policy</a>
+                            </li>
+                            <li>
+                                <a href="#">Security Policy</a>
+                            </li>
+                            <li>
+                                <a href="/movies/">Ticketing</a>
+                            </li>
+                            <li>
+                                <a href="/upcoming">Upcoming</a>
+                            </li>
+                            <li>
+                                <a href="/events">Special</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="#">Ticketing Info</a>
+                            </li>
+                            <li>
+                                <a href="/gift_card">Gift Card Shop</a>
+                            </li>
+                            <li>
+                                <a href="#">Advise With Us</a>
+                            </li>
+                            <li>
+                                <a href="#">FAQs</a>
+                            </li>
+                            <li>
+                                <a href="#">Contact Us</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <a href="#" target="_blank">Facebook</a> |
+                        <a href="#" target="_blank">YouTube</a> |
+                        <a href="#" target="_blank">Instagram</a>
+                        <br>
+                        <br>
+                        <a href="#">Google Play</a> |
+                        <a href="#">App Store</a>
+                    </div>
+                </div>
+                <hr>
+                <p class="text-center small">© 2026 Cinema.com.hk Limited. Best viewed at 1280x960 resolution.</p>
+            </div>
+        </footer>
+    </div>
 {% endblock %}

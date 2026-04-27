@@ -2,7 +2,7 @@
 
 {% block app_content %}
 <div class="container">
-    <h1>近期活動</h1>
+    <h1>Recent activities</h1>
     
     {% if events %}
         <div class="row">
@@ -19,7 +19,7 @@
                         
                         <a href="{{ url_for('event_detail', slug=event.slug) }}" 
                             class="btn btn-primary btn-sm">
-                            查看活動電影 →
+                            View event movies →
                         </a>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <p class="alert alert-info">暫時沒有任何活動。</p>
+        <p class="alert alert-info">No activity at the moment.</p>
     {% endif %}
 </div>
 {% endblock %}

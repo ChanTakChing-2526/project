@@ -1,64 +1,7 @@
 {% extends "base.html.j2" %}
 {% import 'bootstrap/wtf.html' as wtf %}
-{# {% block app_content %}
-    <h1>Member Login</h1>
-    <div class="row">
-        <div class="col-md-4">{{ wtf.quick_form(form) }}</div>
-    </div>
-    <p>
-        New User? <a href="{{ url_for('register') }}">Click to Register</a>
-    </p>
-    <p>
-        Forgot Your Password?
-        <a href="{{ url_for('reset_password_request') }}">Click to Reset It</a>
-    </p>
-{% endblock %} #}
 {% block app_content %}
-{#<style>
-    .container-fluid {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: inline-flex; /* 讓選單橫向排列並居中 */
-        align-items: center;
-    }
-
-    .container-fluidli {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .container-fluid li a {
-        color: #333;
-        text-decoration: none;
-        font-size: 14px;
-        padding: 0 25px; /* 控制文字間距 */
-        transition: color 0.3s;
-    }
-
-    .container-fluid li a:hover {
-        color: #ed4e51;
-    }
-
-    /* 關鍵：紅色垂直分隔線 */
-    .container-fluid li:not(:last-child)::after {
-        content: "";
-        height: 12px; /* 短線高度 */
-        width: 1px;
-        background-color: #ed4e51; /* 百老匯紅 */
-        display: inline-block;
-    }
-    
-    /* 底部最後一條長紅線 */
-    .bottom-red-line {
-        height: 1px;
-        background-color: #ed4e51;
-        width: 100%;
-        margin-top: 15px;
-    }
-</style>#}
-<style>
+    <style>
     body { background-color: #fff; }
     .container { width: 100% !important; max-width: 100% !important; padding: 0 !important; }
     
@@ -154,39 +97,29 @@
         height: 1px;
         border-top: 1px dashed #ccc;
     }
-</style>
-
-<div class="row" style="margin: 0;">
-    <div class="col-md-7" style="padding: 0;">
-        <img src="https://www.cinema.com.hk/images/bw_login_img.jpg" alt="Cinema" class="cinema-image">
-    </div>
-
-    <div class="col-md-5" style="padding: 0;">
-        <div class="login-form-container">
-            <h2 class="form-title">Member Login</h2>
-            
-            <form action="" method="post">
-                {{ form.hidden_tag() }}
-                
-                {{ form.username(class="form-control form-control-custom", placeholder="Username / Member ID / Email") }}
-                
-                {{ form.password(class="form-control form-control-custom", placeholder="Password") }}
-                
-                <div class="checkbox" style="margin-top: -5px; font-size: 13px;">
-                    <label>
-                        {{ form.remember_me() }} Remember Me
-                    </label>
-                </div>
-
-                <a href="{{ url_for('register') }}" class="link-forget">Forget Password?</a>
-
-                {{ form.submit(class="btn btn-custom-login", value="Login") }}
-
-                <div class="or-divider">Or</div>
-
-                <a href="{{ url_for('register') }}" class="btn btn-custom-register">Register</a>
-            </form>
+    </style>
+    <div class="row" style="margin: 0;">
+        <div class="col-md-7" style="padding: 0;">
+            <img src="https://www.cinema.com.hk/images/bw_login_img.jpg"
+                 alt="Cinema"
+                 class="cinema-image">
+        </div>
+        <div class="col-md-5" style="padding: 0;">
+            <div class="login-form-container">
+                <h2 class="form-title">Member Login</h2>
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    {{ form.username(class="form-control form-control-custom", placeholder="Username / Member ID / Email") }}
+                    {{ form.password(class="form-control form-control-custom", placeholder="Password") }}
+                    <div class="checkbox" style="margin-top: -5px; font-size: 13px;">
+                        <label>{{ form.remember_me() }} Remember Me</label>
+                    </div>
+                    <a href="{{ url_for('register') }}" class="link-forget">Forget Password?</a>
+                    {{ form.submit(class="btn btn-custom-login", value="Login") }}
+                    <div class="or-divider">Or</div>
+                    <a href="{{ url_for('register') }}" class="btn btn-custom-register">Register</a>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

@@ -1,60 +1,49 @@
 {% extends "base.html.j2" %}
-
 {% block app_content %}
-<div class="container mt-4">
-    <div class="position-relative mb-4">
-        <img src="{{ cinema.image_url }}" 
-             alt="{{ cinema.cinemaname }} image" 
-             class="img-fluid rounded w-100" 
-             style="height: 300px; object-fit: cover;">
-        <h1 class="position-absolute bottom-0 start-0 p-4 text-white cinema-title">
-            {{ cinema.cinemaname }}
-        </h1>
-    </div>
-
-    <div class="card p-4 mb-4">
-        <div class="row">
-            <div class="col-md-8">
-                <p><strong>Address:</strong> {{ cinema.address }}</p>
-            </div>
-            <div class="col-md-4 text-md-end">
-                <span class="badge bg-secondary">Map</span>
-                <span class="badge bg-secondary">Parking</span>
+    <div class="container mt-4">
+        <div class="position-relative mb-4">
+            <img src="{{ cinema.image_url }}"
+                 alt="{{ cinema.cinemaname }} image"
+                 class="img-fluid rounded w-100"
+                 style="height: 300px;
+                        object-fit: cover">
+            <h1 class="position-absolute bottom-0 start-0 p-4 text-white cinema-title">{{ cinema.cinemaname }}</h1>
+        </div>
+        <div class="card p-4 mb-4">
+            <div class="row">
+                <div class="col-md-8">
+                    <p>
+                        <strong>Address:</strong> {{ cinema.address }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="badge bg-secondary">Map</span>
+                    <span class="badge bg-secondary">Parking</span>
+                </div>
             </div>
         </div>
+        <div class="card p-4">
+            <h4>Schedule</h4>
+            <hr>
+            {% set current_movie = None %}
+            {% for show in showtimes %}
+                {% if show.movie != current_movie %}
+                    {% set current_movie = show.movie %}
+                    <div class="mt-4 mb-2">
+                        <h5>
+                            <strong>{{ show.movie.moviename }}</strong>
+                        </h5>
+                    </div>
+                {% endif %}
+                <div class="d-flex align-items-center border-bottom py-2">
+                    <div class="me-4" style="width: 120px;">{{ show.start_time.strftime("%d/%m (%a)") }}</div>
+                    <div class="me-4" style="width: 100px;">{{ show.start_time.strftime("%H:%M") }}</div>
+                    <div class="me-4 text-muted">{{ show.hall.hallname }}</div>
+                    <div class="ms-auto fw-bold">${{ show.price_base|int }}</div>
+                </div>
+            {% else %}
+                <p class="text-muted">目前沒有場次。</p>
+            {% endfor %}
+        </div>
     </div>
-
-    <div class="card p-4">
-        <h4>Schedule</h4>
-        <hr>
-        
-        {% set current_movie = None %}
-        
-        {% for show in showtimes %}
-            {% if show.movie != current_movie %}
-                {% set current_movie = show.movie %}
-                <div class="mt-4 mb-2">
-                    <h5><strong>{{ show.movie.moviename }}</strong></h5>
-                </div>
-            {% endif %}
-
-            <div class="d-flex align-items-center border-bottom py-2">
-                <div class="me-4" style="width: 120px;">
-                    {{ show.start_time.strftime('%d/%m (%a)') }}
-                </div>
-                <div class="me-4" style="width: 100px;">
-                    {{ show.start_time.strftime('%H:%M') }}
-                </div>
-                <div class="me-4 text-muted">
-                    {{ show.hall.hallname }}
-                </div>
-                <div class="ms-auto fw-bold">
-                    ${{ show.price_base|int }}
-                </div>
-            </div>
-        {% else %}
-            <p class="text-muted">目前沒有場次。</p>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}
