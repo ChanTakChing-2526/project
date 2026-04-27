@@ -1,6 +1,6 @@
 
 from app import db, app
-from app.models import Movie, Event, Cinema, Halls, Seats, Showtimes, User
+from app.models import Movie, Event, Cinema, Halls, Seats, Showtimes, User, Booking, Tickets
 from datetime import datetime, timedelta, date
 from sqlalchemy import text
 import random
@@ -11,11 +11,17 @@ with app.app_context():
     # ====================== 清空舊資料 ======================
     print("正在清空舊資料...")
 
+    # 先刪掉 Tickets 和 Booking
+    Tickets.query.delete()
+    Booking.query.delete()
+    db.session.commit()
+
+    # 再刪掉其他表
     db.session.execute(text('DELETE FROM movie_event'))
     db.session.commit()
 
-    Showtimes.query.delete()
     Seats.query.delete()
+    Showtimes.query.delete()
     Halls.query.delete()
     Cinema.query.delete()
     Event.query.delete()
@@ -23,14 +29,16 @@ with app.app_context():
     User.query.delete()
     db.session.commit()
 
+
     # ====================== 1. 插入電影 (6 套) ======================
     movies_data = [
-        {"moviename": "復仇者聯盟：終局之戰", "runtime": 181, "category": "Action", "language": "粵語", "releasedate": date(2019, 4, 3), "poster_url": "https://picsum.photos/id/1015/300/400", "formats": ["IMAX", "4DX", "3D"], "is_active": True},
-        {"moviename": "沙丘：第二部", "runtime": 166, "category": "Sci-Fi", "language": "粵語", "releasedate": date(2024, 4, 1), "poster_url": "https://picsum.photos/id/201/300/400", "formats": ["IMAX", "4D Blue Ray", "Dolby Atmos"], "is_active": True},
-        {"moviename": "死侍與金鋼狼", "runtime": 127, "category": "Action", "language": "粵語", "releasedate": date(2024, 5, 27), "poster_url": "https://picsum.photos/id/301/300/400", "formats": ["4DX", "IMAX", "4D Blue Ray"], "is_active": True},
-        {"moviename": "腦筋急轉彎2", "runtime": 96, "category": "Animation", "language": "粵語", "releasedate": date(2024, 7, 13), "poster_url": "https://picsum.photos/id/401/300/400", "formats": ["3D", "Dolby Atmos"], "is_active": False},
-        {"moviename": "侏羅紀世界：重生", "runtime": 145, "category": "Action", "language": "粵語", "releasedate": date(2025, 1, 22), "poster_url": "https://picsum.photos/id/501/300/400", "formats": ["IMAX", "4DX"], "is_active": False},
-        {"moviename": "小丑2:雙重瘋狂", "runtime": 138, "category": "Drama", "language": "粵語", "releasedate": date(2024, 12, 18), "poster_url": "https://picsum.photos/id/601/300/400", "formats": ["4D Blue Ray", "Dolby Atmos"], "is_active": False},
+        {"moviename": "Cold War 1994", "runtime": 117, "category": "Action", "language": "Cantonese (Chinese,English Subtitle)", "releasedate": date(2026, 5, 1), "poster_url": "https://media.grabticks.com/programxo_8aa13ec4-9b11-4162-aca3-2928bbd1b063__.jpg", "formats": ["IMAX", "4DX", "3D"], "is_active": False},
+        {"moviename": "Night King (Director's Cut)", "runtime": 163, "category": "Adult", "language": "Cantonese (Chinese,English Subtitle)", "releasedate": date(2026, 4, 16), "poster_url": "https://media.grabticks.com/programNo_3cf72d03-24af-40e7-a6c2-09649f2a6940__.jpg", "formats": ["IMAX", "4D Blue Ray"], "is_active": True},
+        {"moviename": "The Devil Wears Prada 2", "runtime": 120, "category": "Comedy-drama", "language": "English (Chinese Subtitle)", "releasedate": date(2026, 4, 29), "poster_url": "https://media.grabticks.com/programKi_c4e8c9bd-de5f-4cfc-9ee7-d176dacdac8d__.jpg", "formats": ["4DX", "IMAX", "4D Blue Ray"], "is_active": False},
+        {"moviename": "COLD WAR", "runtime": 102, "category": "Action", "language": "Cantonese (Chinese,English Subtitle)", "releasedate": date(2026, 4, 16), "poster_url": "https://media.grabticks.com/programEo_d5bce64c-fbca-4a52-b164-c29aebf7fbdd__.jpg", "formats": ["4D Blue Ray", "Dolby Atmos"], "is_active": True},
+        {"moviename": "Sirāt", "runtime": 114, "category": "Sci-Fi", "language": "English,Spanish,French,Arabic (Chinese,English Subtitle)", "releasedate": date(2026, 4, 23), "poster_url": "https://media.grabticks.com/programIo_a4e8ce59-bc9a-4a84-b00d-f78532b202c1__.jpg", "formats": ["3D", "Dolby Atmos"], "is_active": True},
+        {"moviename": "IMAX Michael", "runtime": 127, "category": "Action", "language": "English (Chinese Subtitle)", "releasedate": date(2026, 4, 22), "poster_url": "https://media.grabticks.com/programUo_8ef97fae-65ce-4c19-9a6b-17aa25a7d7ef__.jpg", "formats": ["IMAX", "4DX"], "is_active": True},
+        {"moviename": "Assassination Classroom: Our Future Screening", "runtime": 87, "category": "Animation", "language": "Japanese (Chinese,English Subtitle)", "releasedate": date(2026, 5, 3), "poster_url": "https://media.grabticks.com/programVo_a27a0d23-3024-4a56-ba18-3b53528530c4__.jpg", "formats": ["4D Blue Ray", "Dolby Atmos"], "is_active": False},
     ]
 
     for data in movies_data:
