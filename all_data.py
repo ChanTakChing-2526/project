@@ -30,7 +30,7 @@ with app.app_context():
         {"moviename": "死侍與金鋼狼", "runtime": 127, "category": "Action", "language": "粵語", "releasedate": date(2024, 5, 27), "poster_url": "https://picsum.photos/id/301/300/400", "formats": ["4DX", "IMAX", "4D Blue Ray"], "is_active": True},
         {"moviename": "腦筋急轉彎2", "runtime": 96, "category": "Animation", "language": "粵語", "releasedate": date(2024, 7, 13), "poster_url": "https://picsum.photos/id/401/300/400", "formats": ["3D", "Dolby Atmos"], "is_active": False},
         {"moviename": "侏羅紀世界：重生", "runtime": 145, "category": "Action", "language": "粵語", "releasedate": date(2025, 1, 22), "poster_url": "https://picsum.photos/id/501/300/400", "formats": ["IMAX", "4DX"], "is_active": False},
-        {"moviename": "小丑2：雙重瘋狂", "runtime": 138, "category": "Drama", "language": "粵語", "releasedate": date(2024, 12, 18), "poster_url": "https://picsum.photos/id/601/300/400", "formats": ["4D Blue Ray", "Dolby Atmos"], "is_active": False},
+        {"moviename": "小丑2:雙重瘋狂", "runtime": 138, "category": "Drama", "language": "粵語", "releasedate": date(2024, 12, 18), "poster_url": "https://picsum.photos/id/601/300/400", "formats": ["4D Blue Ray", "Dolby Atmos"], "is_active": False},
     ]
 
     for data in movies_data:
@@ -41,11 +41,10 @@ with app.app_context():
 
     # ====================== 2. 插入戲院 + 影廳 + 座位 ======================
     cinemas_data = [
-        {"cinemaname": "PALACE ifc", "region": "HK", "address": "IFC Mall"},
+        {"cinemaname": "PALACE ifc", "region": "HK", "address": "IFC Mall", "image_url": "https://www.playeahk.com/wp-content/uploads/2023/03/misc_cka_12_1504261261.jpg"},
         {"cinemaname": "MOVIE MOVIE Cityplaza", "region": "HK", "address": "Cityplaza"},
         {"cinemaname": "PREMIERE ELEMENTS", "region": "KLN", "address": "Elements"},
         {"cinemaname": "MY CINEMA YOHO MALL", "region": "NT", "address": "Yoho Mall"},
-        {"cinemaname": "Broadway Cinemas TST", "region": "HK", "address": "尖沙咀"},
         {"cinemaname": "The Grand Cinema", "region": "KLN", "address": "旺角"},
     ]
 
