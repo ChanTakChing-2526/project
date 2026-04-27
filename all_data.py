@@ -11,6 +11,7 @@ with app.app_context():
     print("正在清空舊資料...")
 
     # 先刪掉 Tickets 和 Booking
+    db.session.query(GiftCard).delete()
     Tickets.query.delete()
     Booking.query.delete()
     db.session.commit()
@@ -49,10 +50,10 @@ with app.app_context():
     # ====================== 2. 插入戲院 + 影廳 + 座位 ======================
     cinemas_data = [
         {"cinemaname": "PALACE ifc", "region": "HK", "address": "IFC Mall", "image_url": "https://www.playeahk.com/wp-content/uploads/2023/03/misc_cka_12_1504261261.jpg"},
-        {"cinemaname": "MOVIE MOVIE Cityplaza", "region": "HK", "address": "Cityplaza"},
-        {"cinemaname": "PREMIERE ELEMENTS", "region": "KLN", "address": "Elements"},
-        {"cinemaname": "MY CINEMA YOHO MALL", "region": "NT", "address": "Yoho Mall"},
-        {"cinemaname": "The Grand Cinema", "region": "KLN", "address": "旺角"},
+        {"cinemaname": "MOViE MOViE Pacific Place (Admiralty)", "region": "HK", "address": " Level 1, Pacific Place, 88 Queensway Road, Hong Kong Island", "image_url": "https://images.travelandleisureasia.com/wp-content/uploads/sites/5/2024/04/16152505/hong-kong-movie-tickets-cinema-day-2024.jpeg?tr=w-1366,f-jpg,pr-true"},
+        {"cinemaname": "PREMIERE ELEMENTS", "region": "KLN", "address": "2130, 2/F, Fire, ELEMENTS, 1 Austin Road West, Kowloon" , "image_url": "https://www.elementshk.com/v3/assets/blt2e2a6920a8eb4819/blt553399c50459a2e4/5fac1ac6c1502b76a169b96d/Premiere_1360x904.jpg"},
+        {"cinemaname": "KWAI FONG", "region": "NT", "address": "L1-L4 Metroplaza, 223 Hing Fong Road, Kwai Fong, NT", "image_url": "https://if.com.au/wp-content/uploads/2020/10/hoyts.jpg"},
+        {"cinemaname": "Studio City Cinema", "region": "Macau", "address": "Studio City Level 2, Estrada do Istmo, Cotai, Macau (Escalator from Times Square)" ,"image_url": "https://boniutravel.com/wp-content/uploads/2021/10/1634961871-a522abb8d2a81357c73f38466ff46dfb.jpg"},
     ]
 
     for c_data in cinemas_data:
@@ -60,13 +61,11 @@ with app.app_context():
         db.session.add(cinema)
         db.session.flush()
 
-        # 每間戲院建立 3 個影廳
         for i in range(1, 4):
             hall = Halls(cinema_id=cinema.id, hallname=f"Hall {i}")
             db.session.add(hall)
             db.session.flush()
 
-            # 每個影廳生成 8 排 × 10 個座位
             for row_num in range(1, 9):
                 row_code = chr(64 + row_num)  # A ~ H
                 for seat_num in range(1, 11):

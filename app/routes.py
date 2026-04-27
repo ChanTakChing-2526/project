@@ -35,7 +35,12 @@ def cinemas():
 def cinema_detail(id):
     cinema = Cinema.query.get_or_404(id)
     showtimes = cinema.showtimes.order_by(Showtimes.movie_id, Showtimes.start_time).all()
-    return render_template('cinema_detail.html.j2', show_secondary_navbar=True, cinema=cinema)
+
+    print(f"DEBUG: 查到的影院ID: {id}")
+    print(f"DEBUG: 查到的場次數量: {len(showtimes)}")
+    print(f"DEBUG: 場次資料: {showtimes}")
+    
+    return render_template('cinema_detail.html.j2', show_secondary_navbar=True, cinema=cinema, showtimes=showtimes)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
