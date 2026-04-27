@@ -81,7 +81,7 @@ movie_event = db.Table('movie_event',
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
-    slug = db.Column(db.String(200), unique=True, index=True)   # ← 新增呢行
+    slug = db.Column(db.String(200), unique=True, index=True)
     description = db.Column(db.Text)
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
@@ -137,7 +137,7 @@ class Showtimes(db.Model):
 
     movie = db.relationship('Movie', back_populates='showtimes')
     cinema = db.relationship('Cinema', back_populates='showtimes')
-    hall = db.relationship('Halls', back_populates='showtimes')   # ← 改成 back_populates
+    hall = db.relationship('Halls', back_populates='showtimes')
     def __repr__(self):
         return f'<Showtime {self.movie.moviename if self.movie else "Unknown"} at {self.start_time}>'
 
