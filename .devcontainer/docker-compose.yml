@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /data/postgres
     volumes:
-      - postgres:/data/postgres
+      - ./postgres_data:/data/postgres
     ports:
       - "5432:5432"
     networks:
@@ -66,5 +66,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
   pgadmin:
