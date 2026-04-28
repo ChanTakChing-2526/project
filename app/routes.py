@@ -242,4 +242,4 @@ def gift_card():
                 else:
                     flash("User not found.", "danger")
 
-    return render_template("gift_card.html.j2", title="Gift Card")
+    return render_template("gift_card.html.j2", show_secondary_navbar=True, title="Gift Card")

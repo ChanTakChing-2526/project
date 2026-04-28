@@ -1,8 +1,8 @@
-"""add user_id to gift_card, remove pin
+"""initial schema
 
-Revision ID: 997d3d342720
-Revises: 09cef9096b0d
-Create Date: 2026-04-27 11:55:41.324310
+Revision ID: 8fc743bdcc9e
+Revises: 
+Create Date: 2026-04-28 02:48:37.276495
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '997d3d342720'
-down_revision = '09cef9096b0d'
+revision = '8fc743bdcc9e'
+down_revision = None
 branch_labels = None
 depends_on = None
 
