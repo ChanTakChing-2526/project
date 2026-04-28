@@ -9,6 +9,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>User ID:</strong> <span class="badge bg-primary fs-6">{{ user.id }}</span></p>
             <p><strong>Points:</strong> <span class="badge bg-success fs-5">{{ user.points or 0 }} 分</span></p>
             <p><strong>Last Seen:</strong> {{ user.last_seen.strftime('%Y-%m-%d') }}</p>
         </div>
