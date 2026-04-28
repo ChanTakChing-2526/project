@@ -28,8 +28,9 @@ app.register_blueprint(movies_bp)
 with app.app_context():
     db.create_all()
     
-    from app.models import Movie
-    if Movie.query.count() == 0:
-        print("🔄 偵測到資料庫為空，正在自動初始化測試資料（首次啟動）...")
-        import all_data  # 自動執行清空 + 插入所有測試資料
-        print("✅ 資料庫初始化完成！")
+    from app.models import User
+    if User.query.count() == 0:
+        print("🔄 首次啟動，自動建立測試用戶（唔會影響現有資料）...")
+        from all_data import create_test_users_only
+        create_test_users_only()
+        print("✅ 測試用戶建立完成！")

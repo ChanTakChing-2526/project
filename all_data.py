@@ -163,3 +163,29 @@ with app.app_context():
 
     print("\n🎉 所有資料已成功插入！")
     print("你可以開始使用 Ticketing、Upcoming、Events、Cinema、Profile 等功能")
+
+def create_test_users_only():
+    """安全版本：只建立測試用戶，唔會刪除現有資料"""
+    from app import db, app
+    from app.models import User
+
+    with app.app_context():
+        test_users = [
+            {"username": "test1000", "email": "test1000@example.com", "points": 1000},
+            {"username": "test500", "email": "test500@example.com", "points": 500},
+            {"username": "test0", "email": "test0@example.com", "points": 0},
+        ]
+        
+        for u in test_users:
+            existing = User.query.filter_by(username=u["username"]).first()
+            if not existing:
+                user = User(
+                    username=u["username"],
+                    email=u["email"],
+                    points=u["points"]
+                )
+                user.set_password("123456")
+                db.session.add(user)
+        
+        db.session.commit()
+        print("✅ 已建立測試用戶（如果未存在）")
