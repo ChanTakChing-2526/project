@@ -1,0 +1,88 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Seat Selection - {{ showtime.movie.moviename }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Seat Selection - {{ showtime.movie.moviename }}</h2>
+    <p class="text-muted">
+        {{ showtime.cinema.cinemaname }} • {{ showtime.hall.hallname }} • 
+        {{ showtime.start_time.strftime('%Y-%m-%d %H:%M') }}
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <h5 class="mb-4">Screen</h5>
+            
+            <div class="row g-2 justify-content-center" style="max-width: 620px; margin: 0 auto;">
+                {% for seat in seats %}
+                    <button onclick="toggleSeat(this, {{ seat.id }})" 
+                            class="btn m-1 seat-btn {% if seat.is_booked %}btn-danger disabled{% else %}btn-outline-success{% endif %}"
+                            style="width: 42px; height: 42px; font-size: 13px;">
+                        {{ seat.row_code }}{{ seat.seat_number }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <div class="mb-3">
+            Selected <strong id="selected-count">0</strong> tickets x 80 points = 
+            <strong id="total-points">0</strong> points
+        </div>
+        <button onclick="confirmMultiBooking()" class="btn btn-danger btn-lg px-5" id="confirm-btn" disabled>
+            Confirm ticket purchase
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedSeats = [];
+
+function toggleSeat(btn, seatId) {
+    if (btn.classList.contains('btn-danger')) return;
+
+    if (btn.classList.contains('btn-success')) {
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-outline-success');
+        selectedSeats = selectedSeats.filter(id => id !== seatId);
+    } else {
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-success');
+        selectedSeats.push(seatId);
+    }
+
+    document.getElementById('selected-count').textContent = selectedSeats.length;
+    document.getElementById('total-points').textContent = selectedSeats.length * 80;
+    document.getElementById('confirm-btn').disabled = selectedSeats.length === 0;
+}
+
+function confirmMultiBooking() {
+    if (selectedSeats.length === 0) return;
+    
+    const total = selectedSeats.length * 80;
+    if (!confirm(`Please confirm your purchase of ${selectedSeats.length} tickets.\nA total of ${total} points will be deducted.\nThank you for your order!`)) {
+    return;
+}
+
+    fetch('/book_tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            showtime_id: {{ showtime.id }},
+            seat_ids: selectedSeats
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.href = "{{ url_for('index') }}";
+        } else {
+            alert(data.message);
+        }
+    });
+}
+</script>
+{% endblock %}

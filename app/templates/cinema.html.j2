@@ -1,0 +1,58 @@
+{% extends "base.html.j2" %}
+{% block app_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <img src="https://www.cinema.com.hk/_next/image?url=%2Fimages%2Fmap.jpg&w=3840&q=75"
+                     class="img-fluid"
+                     alt="Map">
+            </div>
+            <div class="col-md-4">
+                <h3>Cinema</h3>
+                <hr>
+                {% for region, cinema_list in cinema_dict.items() %}
+                    <div class="cinema-group">
+                        <h4 class="region-title">{{ region }}</h4>
+                        <ul class="list-unstyled">
+                            {% for cinema in cinema_list %}
+                                <li>
+                                    <a href="{{ url_for('cinema_detail', id=cinema.id) }}">{{ cinema.cinemaname }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <style>
+    .cinema-container {
+        border: 1px solid #ddd;
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    .sidebar-list {
+        padding-left: 20px;
+        border-left: 1px solid #eee;
+    }
+
+    .region-title {
+        color: #b58900; 
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    .sidebar-list ul li {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .img-responsive {
+        max-width: 100%;
+        height: auto;
+    }
+    </style>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html.j2" %}
+
+{% block app_content %}
+<div class="container">
+    <h1>Recent activities</h1>
+    
+    {% if events %}
+        <div class="row">
+            {% for event in events %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    {% if event.banner_image %}
+                    <img src="{{ event.banner_image }}" class="card-img-top" alt="{{ event.title }}" 
+                         style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="card-text">{{ event.description | truncate(120) }}</p>
+                        
+                        <a href="{{ url_for('event_detail', slug=event.slug) }}" 
+                            class="btn btn-primary btn-sm">
+                            View event movies →
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="alert alert-info">No activity at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

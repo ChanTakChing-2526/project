@@ -1,0 +1,64 @@
+{% extends "base.html.j2" %}
+{% block title %}Coming Soon - Cinema{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-4">🎟️ Coming Soon</h2>
+        <p class="text-muted mb-4">Movies that will be released soon</p>
+        <div class="row">
+            {% for movie in movies %}
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                {% if movie.poster_url %}
+                                    <img src="{{ movie.poster_url }}"
+                                         class="img-fluid poster-img"
+                                         alt="{{ movie.moviename }}">
+                                {% else %}
+                                    <div class="bg-light d-flex align-items-center justify-content-center h-100"
+                                         style="min-height: 200px">
+                                        <span class="text-muted">No Poster</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-5">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ movie.moviename }}</h4>
+                                    <p class="text-muted">{{ movie.runtime }} mins | {{ movie.category }} | {{ movie.language }}</p>
+                                    <p class="text-muted small">Release Date: {{ movie.releasedate }}</p>
+                                    <div class="mb-3">
+                                        {% for fmt in movie.formats %}<span class="badge bg-secondary me-1">{{ fmt }}</span>{% endfor %}
+                                    </div>
+                                    <p class="card-text text-success fw-bold">Coming Soon</p>
+                                </div>
+                            </div>
+                            <!-- 右邊欄位 -->
+                            <div class="col-md-4 border-start">
+                                <div class="card-body">
+                                    <h6 class="text-muted mb-3">Expected Showtimes</h6>
+                                    <div class="small text-muted">
+                                        Coming soon...
+                                        <br>
+                                        Stay tuned!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <h5 class="text-muted">No upcoming movies at the moment</h5>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+    .poster-img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+    </style>
+{% endblock %}

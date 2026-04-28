@@ -1,0 +1,59 @@
+{% extends "base.html.j2" %}
+{% block app_content %}
+    <div class="container mt-4">
+        <div class="position-relative mb-4">
+            <img src="{{ cinema.image_url }}"
+                 alt="{{ cinema.cinemaname }} image"
+                 class="img-fluid rounded w-100"
+                 style="height: 300px;
+                        object-fit: cover">
+            <h1 class="position-absolute bottom-0 start-0 p-4 text-white cinema-title">{{ cinema.cinemaname }}</h1>
+        </div>
+        <div class="card p-4 mb-4">
+            <div class="row">
+                <div class="col-md-8">
+                    <p>
+                        <strong>Address:</strong> {{ cinema.address }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="badge bg-secondary">Map</span>
+                    <span class="badge bg-secondary">Parking</span>
+                </div>
+            </div>
+        </div>
+<div class="card p-4">
+    <h4>Schedule</h4>
+    <hr>
+    {% set current_movie = None %}
+    {% for show in showtimes %}
+        {% if show.movie != current_movie %}
+            {% if not loop.first %} </div> </div> </div> {% endif %}
+            {% set current_movie = show.movie %}
+            
+            <div class="row align-items-center mb-4 justify-content-center" style="max-width: 900px; margin: 0 auto;">
+                
+                <div class="col-md-4 text-md-end pe-4">
+                    <h5 class="mb-0"><strong>{{ show.movie.moviename }}</strong></h5>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="d-flex flex-wrap gap-2">
+        {% endif %}
+        
+        <a href="{{ url_for('ticket_select', showtime_id=show.id) }}" 
+           class="card p-2 border text-center text-decoration-none text-dark shadow-sm" 
+           style="min-width: 100px; transition: 0.2s;">
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <span class="small text-muted">{{ show.start_time.strftime("%d/%m") }}</span>
+                <span class="fw-bold">{{ show.start_time.strftime("%H:%M") }}</span>
+            </div>
+        </a>
+
+        {% if loop.last %} </div> </div> </div> {% endif %}
+    {% else %}
+        <p class="text-muted">There are currently no matches scheduled.</p>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}
