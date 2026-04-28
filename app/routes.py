@@ -215,31 +215,31 @@ def book_tickets():
 
 @app.route("/gift_card", methods=["GET", "POST"])
 def gift_card():
-    error = None
-
     if request.method == "POST":
         card_number = request.form.get("card_number")
-        pin = request.form.get("pin")
+        user_id = request.form.get("user_id")
 
-        setup_card_number = request.form.get("setup_card_number")
-
-        if card_number and pin:
+        if card_number and user_id:
             card = GiftCard.query.filter_by(card_number=card_number).first()
-            if card and str(card.pin) == pin:
-                flash(f"卡號 {card_number} 餘額: HK$ {card.balance:.2f}", "success")
-            else:
-                error = "無效的禮品卡號或密碼。"
 
-        elif setup_card_number:
-            if not current_user.is_authenticated:
-                error = "請先登入以設定禮品卡密碼"
+            if not card:
+                flash("Gift Card not found.", "danger")
+            elif not card.is_active or card.balance <= 0:
+                flash("This Gift Card has already been redeemed.", "danger")
+            elif str(card.user_id) != user_id:
+                flash("User ID does not match this Gift Card.", "danger")
             else:
-                card = GiftCard.query.filter_by(card_number=setup_card_number).first()
-                if card:
-                    card.pin = str(current_user.id)
+                # ✅ 正確做法：先記低金額，再清零
+                redeem_amount = card.balance
+                user = User.query.get(int(user_id))
+                
+                if user:
+                    user.points += redeem_amount
+                    card.balance = 0
+                    card.is_active = False
                     db.session.commit()
-                    flash("Top-up successful", "success")
+                    flash(f"Success! Added {redeem_amount:.2f} point to User ID {user_id}", "success")
                 else:
-                    error = "無效的禮品卡號"
+                    flash("User not found.", "danger")
 
-    return render_template("gift_card.html.j2", show_secondary_navbar=True, error=error, title="Gift Card")
+    return render_template("gift_card.html.j2", title="Gift Card")

@@ -134,11 +134,32 @@ with app.app_context():
     db.session.commit()
     print("✅ 已建立測試用戶")
 
-    # ====================== 6. 插入 GiftCard 測試資料 ======================
-    card = GiftCard(card_number="1234567890123456", pin="1234", balance=500.0)
-    db.session.add(card)
+        # ====================== 6. 插入 GiftCard 測試資料 ======================
+    print("正在更新 Gift Card 資料...")
+
+    # 先刪除所有舊 Gift Card
+    GiftCard.query.delete()
     db.session.commit()
-    print("✅ 已建立測試 GiftCard")
+
+    test_user = User.query.filter_by(username="test1000").first()
+
+    cards = [
+        {"card_number": "1234567890123456", "user_id": test_user.id, "balance": 300.0},
+        {"card_number": "9876543210987654", "user_id": test_user.id, "balance": 150.0},
+        {"card_number": "5555666677778888", "user_id": test_user.id, "balance": 500.0},
+    ]
+
+    for c in cards:
+        card = GiftCard(
+            card_number=c["card_number"],
+            user_id=c["user_id"],
+            balance=c["balance"],
+            is_active=True
+        )
+        db.session.add(card)
+
+    db.session.commit()
+    print("✅ 已建立 3 張新 Gift Card（已連結 User ID）")
 
     print("\n🎉 所有資料已成功插入！")
     print("你可以開始使用 Ticketing、Upcoming、Events、Cinema、Profile 等功能")

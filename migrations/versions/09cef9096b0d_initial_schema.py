@@ -1,8 +1,8 @@
 """initial schema
 
-Revision ID: 0a3a2d9ad1f1
+Revision ID: 09cef9096b0d
 Revises: 
-Create Date: 2026-04-27 04:39:06.982081
+Create Date: 2026-04-27 10:25:17.992465
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0a3a2d9ad1f1'
+revision = '09cef9096b0d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,6 +42,16 @@ def upgrade():
     with op.batch_alter_table('event', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_event_slug'), ['slug'], unique=True)
 
+    op.create_table('gift_card',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('card_number', sa.String(length=16), nullable=False),
+    sa.Column('pin', sa.String(length=4), nullable=False),
+    sa.Column('balance', sa.Float(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('card_number')
+    )
     op.create_table('movie',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('moviename', sa.String(length=128), nullable=True),
@@ -151,6 +161,7 @@ def downgrade():
         batch_op.drop_index(batch_op.f('ix_movie_moviename'))
 
     op.drop_table('movie')
+    op.drop_table('gift_card')
     with op.batch_alter_table('event', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_event_slug'))
 

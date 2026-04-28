@@ -183,13 +183,16 @@ class GiftCard(db.Model):
     __tablename__ = 'gift_card'
     id = db.Column(db.Integer, primary_key=True)
     card_number = db.Column(db.String(16), unique=True, nullable=False)
-    pin = db.Column(db.String(4), nullable=False)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))   # ← 新增
     balance = db.Column(db.Float, default=0.0)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    user = db.relationship('User', backref='gift_cards')
+
     def __repr__(self):
         return f'<GiftCard {self.card_number}>'
+    
 
-    def check_pin(self, input_pin):
-        return self.pin == input_pin
+
