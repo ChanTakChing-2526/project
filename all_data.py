@@ -121,16 +121,26 @@ with app.app_context():
     db.session.commit()
     print("✅ 已為上映電影生成場次")
 
-    # ====================== 5. 插入測試用戶 ======================
+    # ====================== 插入測試用戶 ======================
     for username, points in [("test1000", 1000), ("test500", 500), ("test0", 0)]:
         user = User.query.filter_by(username=username).first()
         if not user:
-            user = User(username=username, email=f"{username}@example.com")
+            user = User(
+                username=username,
+                email=f"{username}@example.com",
+                given_name="Test",
+                surname="User",
+                gender="Male",
+                birth_date=datetime(2000, 1, 1),
+                about_me="This is a test user",
+                last_seen=datetime.utcnow(),
+                points=points
+            )
             user.set_password("123456")
-            user.points = points
             db.session.add(user)
         else:
             user.points = points
+            user.last_seen = datetime.utcnow()
     db.session.commit()
     print("✅ 已建立測試用戶")
 
