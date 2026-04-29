@@ -15,8 +15,7 @@
             {{ form.hidden_tag() }}
             
             <h3 class="section-title">Member Profile</h3>
-            
-            {# 使用 macro 簡化重複的結構 #}
+        
             {% macro render_field(field) %}
             <div class="form-group">
                 {{ field.label }}
@@ -36,7 +35,6 @@
             {{ render_field(form.given_name) }}
             {{ render_field(form.surname) }}
             
-            {# 處理特殊欄位 (Radio/Select) #}
             <div class="form-group">
                 {{ form.gender.label }}
                 <div class="field-container">{{ form.gender() }}</div>
