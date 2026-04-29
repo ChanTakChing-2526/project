@@ -11,7 +11,6 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    # Member Profile
     username = StringField("Username *", validators=[
         DataRequired(), Length(min=5, max=10, message="5-10 characters required")
     ], description="5 – 10 alphabetic, numeric characters or full stop")
@@ -28,18 +27,17 @@ class RegistrationForm(FlaskForm):
         DataRequired(), EqualTo("password", message="Passwords must match")
     ])
 
-    # Basic Information
-    given_name = StringField("Given Name", validators=[DataRequired()])
-    surname = StringField("Surname", validators=[DataRequired()])
-    gender = RadioField("Gender", choices=[("Male", "Male"), ("Female", "Female")])
-    day = SelectField("Day of Birth", choices=[(str(i), str(i)) for i in range(1, 32)])
-    month = SelectField("Month of Birth", choices=[
+    given_name = StringField("Given Name *", validators=[DataRequired()])
+    surname = StringField("Surname *", validators=[DataRequired()])
+    gender = RadioField("Gender *", choices=[("Male", "Male"), ("Female", "Female")])
+    day = SelectField("Day of Birth *", choices=[(str(i), str(i)) for i in range(1, 32)])
+    month = SelectField("Month of Birth *", choices=[
         ("1", "January"), ("2", "February"), ("3", "March"),
         ("4", "April"), ("5", "May"), ("6", "June"),
         ("7", "July"), ("8", "August"), ("9", "September"),
         ("10", "October"), ("11", "November"), ("12", "December")
     ])
-    year = SelectField("Year of Birth", choices=[(str(y), str(y)) for y in range(1950, 2026)])
+    year = SelectField("Year of Birth *", choices=[(str(y), str(y)) for y in range(1950, 2026)])
 
     submit = SubmitField("Register")
 
