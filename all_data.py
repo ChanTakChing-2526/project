@@ -7,16 +7,13 @@ import random
 with app.app_context():
     db.create_all()
 
-    # ====================== 清空舊資料 ======================
     print("正在清空舊資料...")
 
-    # 先刪掉 Tickets 和 Booking
     db.session.query(GiftCard).delete()
     Tickets.query.delete()
     Booking.query.delete()
     db.session.commit()
 
-    # 再刪掉其他表
     db.session.execute(text('DELETE FROM movie_event'))
     db.session.commit()
 
@@ -30,7 +27,6 @@ with app.app_context():
     db.session.commit()
 
 
-    # ====================== 1. 插入電影 (6 套) ======================
     movies_data = [
         {"moviename": "Cold War 1994", "runtime": 117, "category": "Action", "language": "Cantonese (Chinese,English Subtitle)", "releasedate": date(2026, 5, 1), "poster_url": "https://media.grabticks.com/programxo_8aa13ec4-9b11-4162-aca3-2928bbd1b063__.jpg", "formats": ["IMAX", "4DX", "3D"], "is_active": False},
         {"moviename": "Night King (Director's Cut)", "runtime": 163, "category": "Adult", "language": "Cantonese (Chinese,English Subtitle)", "releasedate": date(2026, 4, 16), "poster_url": "https://media.grabticks.com/programNo_3cf72d03-24af-40e7-a6c2-09649f2a6940__.jpg", "formats": ["IMAX", "4D Blue Ray"], "is_active": True},
@@ -45,9 +41,8 @@ with app.app_context():
         movie = Movie(**data)
         db.session.add(movie)
     db.session.commit()
-    print("✅ 已插入 6 套電影")
+    print("✅ 已插入電影")
 
-    # ====================== 2. 插入戲院 + 影廳 + 座位 ======================
     cinemas_data = [
         {"cinemaname": "PALACE ifc", "region": "HK", "address": "IFC Mall", "image_url": "https://www.playeahk.com/wp-content/uploads/2023/03/misc_cka_12_1504261261.jpg"},
         {"cinemaname": "MOViE MOViE Pacific Place (Admiralty)", "region": "HK", "address": " Level 1, Pacific Place, 88 Queensway Road, Hong Kong Island", "image_url": "https://images.travelandleisureasia.com/wp-content/uploads/sites/5/2024/04/16152505/hong-kong-movie-tickets-cinema-day-2024.jpeg?tr=w-1366,f-jpg,pr-true"},
@@ -73,16 +68,14 @@ with app.app_context():
                     db.session.add(seat)
 
     db.session.commit()
-    print("✅ 已插入戲院、影廳同座位")
+    print("✅ 已插入戲院、影廳、座位")
 
-    # ====================== 3. 插入活動 ======================
     event1 = Event(title="金像獎特別推介", description="第42屆香港電影金像獎推介電影", start_date=datetime(2025,4,1), end_date=datetime(2025,5,31), banner_image="https://picsum.photos/id/237/800/300")
     event2 = Event(title="4DX 限定場", description="為 4DX 發燒友準備的特別放映", start_date=datetime(2025,4,20), end_date=datetime(2025,5,10), banner_image="https://picsum.photos/id/1015/800/300")
 
     db.session.add_all([event1, event2])
     db.session.commit()
 
-    # 關聯電影到活動
     all_movies = Movie.query.all()
     for movie in all_movies:
         event1.movies.append(movie)
@@ -92,9 +85,8 @@ with app.app_context():
         event2.movies.append(movie)
 
     db.session.commit()
-    print("✅ 已插入 2 個活動並關聯電影")
+    print("✅ 已插入活動並關聯電影")
 
-    # ====================== 4. 生成場次 ======================
     active_movies = Movie.query.filter_by(is_active=True).all()
     cinemas = Cinema.query.all()
 
@@ -119,9 +111,8 @@ with app.app_context():
                 db.session.add(show)
 
     db.session.commit()
-    print("✅ 已為上映電影生成場次")
+    print("✅ 已插入上映電影場次")
 
-    # ====================== 插入測試用戶 ======================
     for username, points in [("test1000", 1000), ("test500", 500), ("test0", 0)]:
         user = User.query.filter_by(username=username).first()
         if not user:
@@ -144,10 +135,6 @@ with app.app_context():
     db.session.commit()
     print("✅ 已建立測試用戶")
 
-        # ====================== 6. 插入 GiftCard 測試資料 ======================
-    print("正在更新 Gift Card 資料...")
-
-    # 先刪除所有舊 Gift Card
     GiftCard.query.delete()
     db.session.commit()
 
@@ -169,13 +156,9 @@ with app.app_context():
         db.session.add(card)
 
     db.session.commit()
-    print("✅ 已建立 3 張新 Gift Card（已連結 User ID）")
-
-    print("\n🎉 所有資料已成功插入！")
-    print("你可以開始使用 Ticketing、Upcoming、Events、Cinema、Profile 等功能")
+    print("✅ 已建立Gift Card（已連結 User ID）")
 
 def create_test_users_only():
-    """安全版本：只建立測試用戶，唔會刪除現有資料"""
     from app import db, app
     from app.models import User
 
