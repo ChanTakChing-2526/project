@@ -24,3 +24,13 @@ moment = Moment(app)
 from app import models, routes
 from app.movies import movies_bp
 app.register_blueprint(movies_bp)
+
+with app.app_context():
+    db.create_all()
+    
+    from app.models import User
+    if User.query.count() == 0:
+        print("🔄 首次啟動，自動建立測試用戶（唔會影響現有資料）...")
+        from all_data import create_test_users_only
+        create_test_users_only()
+        print("✅ 測試用戶建立完成！")

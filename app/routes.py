@@ -34,12 +34,7 @@ def cinemas():
 @app.route('/cinema/<int:id>')
 def cinema_detail(id):
     cinema = Cinema.query.get_or_404(id)
-    showtimes = cinema.showtimes.order_by(Showtimes.movie_id, Showtimes.start_time).all()
-
-    print(f"DEBUG: 查到的影院ID: {id}")
-    print(f"DEBUG: 查到的場次數量: {len(showtimes)}")
-    print(f"DEBUG: 場次資料: {showtimes}")
-    
+    showtimes = cinema.showtimes.order_by(Showtimes.movie_id, Showtimes.start_time).all()    
     return render_template('cinema_detail.html.j2', show_secondary_navbar=True, cinema=cinema, showtimes=showtimes)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -229,7 +224,6 @@ def gift_card():
             elif str(card.user_id) != user_id:
                 flash("User ID does not match this Gift Card.", "danger")
             else:
-                # ✅ 正確做法：先記低金額，再清零
                 redeem_amount = card.balance
                 user = User.query.get(int(user_id))
                 
