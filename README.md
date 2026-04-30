@@ -1,3 +1,4 @@
+# Project Title
 ITP4924 EA Assignment
 
 ## Description
