@@ -144,6 +144,7 @@ with app.app_context():
         {"card_number": "1234567890123456", "user_id": test_user.id, "balance": 300.0},
         {"card_number": "9876543210987654", "user_id": test_user.id, "balance": 150.0},
         {"card_number": "5555666677778888", "user_id": test_user.id, "balance": 500.0},
+        {"card_number": "0000000000000001", "user_id": test_user.id, "balance": 350.0},
     ]
 
     for c in cards:
